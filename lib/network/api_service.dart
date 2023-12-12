@@ -2,57 +2,67 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'https://your-api-url.com';
+  static const String baseUrl = 'https://ppr-nvl.gov.pk/epinode/api';
 
-  static Future<Map<String, dynamic>> login(
-      String username, String password) async {
-    final url = Uri.parse('$baseUrl/login');
-
-    final response = await http.post(
-      url,
-      body: jsonEncode({
-        'username': username,
-        'password': password,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  static Future<dynamic> login(String username, String password) async {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl/login.php'),
     );
+    request.fields.addAll({'cnic': username, 'password': password});
+
+    http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      return responseData;
+      var body = await response.stream.bytesToString();
+      return body;
     } else {
-      throw Exception('Failed to login');
+      print(response.reasonPhrase);
     }
+    return null;
   }
 
-  static Future<Map<String, dynamic>> register(
+  static Future<dynamic> register(
     String fullName,
-    String email,
+    String cnic,
     String password,
     String phone,
   ) async {
-    final url = Uri.parse('$baseUrl/register');
-
-    final response = await http.post(
-      url,
-      body: jsonEncode({
-        'fullName': fullName,
-        'email': email,
-        'password': password,
-        'phone': phone,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl/signup.php'),
     );
+    request.fields.addAll({
+      'name': fullName,
+      'cnic': cnic,
+      'phone': phone,
+      'password': password,
+    });
+
+    http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      return responseData;
+      var body = await response.stream.bytesToString();
+      return body;
     } else {
-      throw Exception('Registration failed');
+      print(response.reasonPhrase);
     }
+    return null;
+  }
+
+  static Future<dynamic> getData({int loggedInUserId = 0}) async {
+    var request =
+        http.MultipartRequest('POST', Uri.parse('$baseUrl/get_data.php'));
+    request.fields.addAll({'user_id': loggedInUserId.toString()});
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var body = await response.stream.bytesToString();
+      return body;
+    } else {
+      print(response.reasonPhrase);
+    }
+    return null;
   }
 }

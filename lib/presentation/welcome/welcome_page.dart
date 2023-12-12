@@ -111,12 +111,6 @@ class WelcomePage extends StatelessWidget {
         text: "PPR Reporting",
         margin: EdgeInsets.only(left: 45.h),
       ),
-      actions: [
-        AppbarTrailingImage(
-          imagePath: ImageConstant.imgPepiconsPopMenu,
-          margin: EdgeInsets.fromLTRB(34.h, 5.v, 34.h, 10.v),
-        ),
-      ],
     );
   }
 

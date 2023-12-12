@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ppr_disease_reporting/core/app_export.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_title.dart';
-import 'package:ppr_disease_reporting/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
 import 'package:ppr_disease_reporting/widgets/custom_checkbox_button.dart';
 import 'package:ppr_disease_reporting/widgets/custom_elevated_button.dart';
 import 'package:ppr_disease_reporting/widgets/custom_text_form_field.dart';
+import '../../helper/c_n_i_c_formatter.dart';
 import 'login_controller.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({Key? key})
       : super(
           key: key,
         );
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final LoginController loginController = LoginController();
 
-  TextEditingController userNameController = TextEditingController();
+  TextEditingController CNICController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
 
@@ -65,18 +71,29 @@ class LoginPage extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.only(left: 6.h),
                   child: Text(
-                    "Username",
+                    "CNIC",
                     style: theme.textTheme.titleLarge,
                   ),
                 ),
               ),
               SizedBox(height: 11.v),
               Padding(
-                padding: EdgeInsets.only(left: 6.h),
-                child: CustomTextFormField(
-                  controller: userNameController,
-                ),
-              ),
+                  padding: EdgeInsets.only(left: 6.h),
+                  child: CustomTextFormField(
+                    controller: CNICController,
+                    validator: (value) {
+                      RegExp cnicRegex = RegExp(r'^\d{5}-\d{7}-\d$');
+
+                      if (!cnicRegex.hasMatch(value ?? "")) {
+                        return 'Invalid CNIC format';
+                      }
+                      return null;
+                    },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      CNICFormatter(),
+                    ],
+                  )),
               SizedBox(height: 51.v),
               Align(
                 alignment: Alignment.centerLeft,
@@ -92,6 +109,7 @@ class LoginPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 6.h),
                 child: CustomTextFormField(
+                  obscureText: true,
                   controller: passwordController,
                   textInputAction: TextInputAction.done,
                 ),
@@ -115,7 +133,9 @@ class LoginPage extends StatelessWidget {
               ),
               SizedBox(height: 55.v),
               CustomElevatedButton(
-                onPressed: () => _handleLogin(),
+                onPressed: () async {
+                  await _handleLogin(context);
+                },
                 text: "Login",
                 margin: EdgeInsets.only(left: 6.h),
               ),
@@ -127,10 +147,17 @@ class LoginPage extends StatelessWidget {
                       text: "Don’t have an account? ",
                       style: theme.textTheme.labelLarge,
                     ),
-                    TextSpan(
-                      text: "Sign Up",
-                      style: CustomTextStyles.labelLargePrimary.copyWith(
-                        decoration: TextDecoration.underline,
+                    WidgetSpan(
+                      child: GestureDetector(
+                        onTap: () {
+                          onTapScreenTitle(context, AppRoutes.registerPage);
+                        },
+                        child: Text(
+                          "Sign Up",
+                          style: CustomTextStyles.labelLargePrimary.copyWith(
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -145,18 +172,38 @@ class LoginPage extends StatelessWidget {
     );
   }
 
+  Future<void> _handleLogin(BuildContext context) async {
+    final CNIC = CNICFormatter.saveCNICToDatabase(CNICController.text);
+    final password = passwordController.text;
+
+    try {
+      final result = await loginController.handleLogin(
+          CNIC, password, context, rememberme);
+
+      if (result.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login successful')),
+        );
+
+        onTapScreenTitleAndRemoveUntill(context, AppRoutes.homePage);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login failed. ${result.message}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed. Please try again later.')),
+      );
+    }
+  }
+
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       title: AppbarTitle(
         text: "PPR Reporting",
         margin: EdgeInsets.only(left: 45.h),
       ),
-      actions: [
-        AppbarTrailingImage(
-          imagePath: ImageConstant.imgPepiconsPopMenu,
-          margin: EdgeInsets.fromLTRB(34.h, 5.v, 34.h, 10.v),
-        ),
-      ],
     );
   }
 
@@ -166,15 +213,28 @@ class LoginPage extends StatelessWidget {
       value: rememberme,
       padding: EdgeInsets.symmetric(vertical: 2.v),
       onChange: (value) {
-        rememberme = value;
+        setState(() {
+          rememberme = value;
+        });
       },
     );
   }
 
-  Future<void> _handleLogin() async {
-    final username = userNameController.text;
-    final password = passwordController.text;
+  void onTapScreenTitle(
+    BuildContext context,
+    String routeName,
+  ) {
+    Navigator.pushNamed(context, routeName);
+  }
 
-    await loginController.handleLogin(username, password);
+  void onTapScreenTitleAndRemoveUntill(
+    BuildContext context,
+    String routeName,
+  ) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      routeName,
+      (route) => false,
+    );
   }
 }

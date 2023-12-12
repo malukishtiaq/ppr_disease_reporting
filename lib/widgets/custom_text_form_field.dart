@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ppr_disease_reporting/core/app_export.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -26,6 +27,8 @@ class CustomTextFormField extends StatelessWidget {
     this.fillColor,
     this.filled = true,
     this.validator,
+    this.inputFormatters,
+    this.maxLength,
   }) : super(
           key: key,
         );
@@ -74,6 +77,10 @@ class CustomTextFormField extends StatelessWidget {
 
   final FormFieldValidator<String>? validator;
 
+  final List<TextInputFormatter>? inputFormatters;
+
+  final int? maxLength;
+
   @override
   Widget build(BuildContext context) {
     return alignment != null
@@ -96,7 +103,9 @@ class CustomTextFormField extends StatelessWidget {
           keyboardType: textInputType,
           maxLines: maxLines ?? 1,
           decoration: decoration,
+          maxLength: maxLength,
           validator: validator,
+          inputFormatters: inputFormatters,
         ),
       );
   InputDecoration get decoration => InputDecoration(
