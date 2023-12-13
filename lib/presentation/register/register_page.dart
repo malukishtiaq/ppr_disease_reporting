@@ -1,39 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:ppr_disease_reporting/core/app_export.dart';
 import 'package:ppr_disease_reporting/helper/c_n_i_c_formatter.dart';
+import 'package:ppr_disease_reporting/models/registration_result.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_title.dart';
-import 'package:ppr_disease_reporting/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
 import 'package:ppr_disease_reporting/widgets/custom_elevated_button.dart';
 import 'package:ppr_disease_reporting/widgets/custom_text_form_field.dart';
 import 'register_controller.dart';
 
-class RegisterPage extends StatefulWidget {
-  RegisterPage({Key? key})
-      : super(
-          key: key,
-        );
-
-  @override
-  State<RegisterPage> createState() => _RegisterPageState();
-}
-
-class _RegisterPageState extends State<RegisterPage> {
-  final RegisterController registerController = RegisterController();
-
-  TextEditingController fullNameController = TextEditingController();
-
-  TextEditingController CNICController = TextEditingController();
-
-  TextEditingController passwordController = TextEditingController();
-
-  TextEditingController phoneController = TextEditingController();
+class RegisterPage extends GetView<RegisterController> {
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController CNICController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    mediaQueryData = MediaQuery.of(context);
-
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
@@ -192,7 +176,6 @@ class _RegisterPageState extends State<RegisterPage> {
             return 'Please enter your phone number';
           }
 
-          // Define the expected pattern for the phone number
           RegExp phoneRegex = RegExp(r'^\d{11}$');
 
           if (!phoneRegex.hasMatch(value)) {
@@ -206,111 +189,100 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _buildSignUp(BuildContext context) {
-    bool isLoading = false; // Track loading state
-
     return Stack(
       children: [
         CustomElevatedButton(
           text: "Sign Up",
           margin: EdgeInsets.only(left: 2.h),
-          onPressed: isLoading
-              ? null
-              : () async {
-                  // Validate form fields before proceeding
-                  if (!_validateFields()) {
-                    return;
-                  }
+          onPressed: () async {
+            if (!_validateFields()) {
+              return;
+            }
 
-                  setState(() {
-                    isLoading = true;
-                  });
+            final fullName = fullNameController.text;
+            final CNIC = CNICFormatter.saveCNICToDatabase(CNICController.text);
+            final password = passwordController.text;
+            final phone = phoneController.text;
 
-                  final fullName = fullNameController.text;
-                  final CNIC =
-                      CNICFormatter.saveCNICToDatabase(CNICController.text);
-                  final password = passwordController.text;
-                  final phone = phoneController.text;
+            try {
+              RegistrationResult? result =
+                  await controller.register(fullName, CNIC, password, phone);
+              if (result == null) {
+                return;
+              }
+              if (result.success) {
+                Get.snackbar(
+                  'Success',
+                  'Registration successful',
+                  snackPosition: SnackPosition.BOTTOM,
+                );
 
-                  try {
-                    final result = await registerController.register(
-                        fullName, CNIC, password, phone);
-
-                    if (result.success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Registration successful')),
-                      );
-
-                      onTapScreenTitle(context, AppRoutes.loginPage);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                                Text('Registration failed. ${result.message}')),
-                      );
-                    }
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text(
-                              'Registration failed. Please try again later.')),
-                    );
-                  } finally {
-                    setState(() {
-                      isLoading = false;
-                    });
-                  }
-                },
+                onTapScreenTitle(AppRoutes.loginPage);
+              } else {
+                Get.snackbar(
+                  'Error',
+                  'Registration failed. ${result.message}',
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              }
+            } catch (e) {
+              Get.snackbar(
+                'Error',
+                'Registration failed. Please try again later.',
+                snackPosition: SnackPosition.BOTTOM,
+              );
+            }
+          },
         ),
-        if (isLoading)
-          Positioned.fill(
-            child: Container(
-              color: Colors.black.withOpacity(0.3),
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          ),
       ],
     );
   }
 
   bool _validateFields() {
     if (fullNameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter your full name')),
+      Get.snackbar(
+        'Error',
+        'Please enter your full name',
+        snackPosition: SnackPosition.BOTTOM,
       );
       return false;
     }
 
     RegExp cnicRegex = RegExp(r'^\d{5}-\d{7}-\d$');
     if (!cnicRegex.hasMatch(CNICController.text)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid CNIC format')),
+      Get.snackbar(
+        'Error',
+        'Invalid CNIC format',
+        snackPosition: SnackPosition.BOTTOM,
       );
       return false;
     }
 
     if (passwordController.text.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Password must be at least 6 characters long')),
+      Get.snackbar(
+        'Error',
+        'Password must be at least 6 characters long',
+        snackPosition: SnackPosition.BOTTOM,
       );
       return false;
     }
 
     String phone = phoneController.text;
     if (phone.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter your phone number')),
+      Get.snackbar(
+        'Error',
+        'Please enter your phone number',
+        snackPosition: SnackPosition.BOTTOM,
       );
       return false;
     }
 
-    RegExp phoneRegex = RegExp(r'^0300\d{7}$');
+    RegExp phoneRegex = RegExp(r'^03\d{2}\d{7}$');
     if (!phoneRegex.hasMatch(phone)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                'Invalid phone number format. Please enter a valid number like 03001234567')),
+      Get.snackbar(
+        'Error',
+        'Invalid phone number format. Please enter a valid number like 03001234567',
+        snackPosition: SnackPosition.BOTTOM,
       );
       return false;
     }
@@ -318,10 +290,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return true;
   }
 
-  void onTapScreenTitle(
-    BuildContext context,
-    String routeName,
-  ) {
-    Navigator.pushReplacementNamed(context, routeName);
+  void onTapScreenTitle(String routeName) {
+    Get.offNamed(routeName);
   }
 }

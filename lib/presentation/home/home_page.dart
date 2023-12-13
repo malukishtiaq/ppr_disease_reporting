@@ -1,89 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ppr_disease_reporting/core/app_export.dart';
+import 'package:ppr_disease_reporting/models/data_response.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_title.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
-import 'package:provider/provider.dart';
-
-import '../../provider/user_provider.dart';
-import '../../widgets/custom_elevated_button.dart';
+import 'package:ppr_disease_reporting/provider/user_controller.dart';
+import 'package:ppr_disease_reporting/widgets/custom_elevated_button.dart';
 import 'home_controller.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key})
-      : super(
-          key: key,
-        );
+class HomePage extends StatelessWidget {
+  final HomeController homeController = Get.put(HomeController());
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-
-    final user = userProvider.user;
-    mediaQueryData = MediaQuery.of(context);
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
         body: Container(
           width: double.maxFinite,
-          padding: EdgeInsets.symmetric(
-            horizontal: 50.h,
-            vertical: 48.v,
-          ),
-          child: Column(
-            children: [
-              CustomImageView(
-                imagePath: ImageConstant.imgReshotIllustra,
-                height: 249.v,
-                width: 321.h,
+          padding: EdgeInsets.symmetric(horizontal: 50.h, vertical: 48.v),
+          child: RefreshIndicator(
+            onRefresh: () async => await homeController.getData(),
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  CustomImageView(
+                    imagePath: ImageConstant.imgReshotIllustra,
+                    height: 249.v,
+                    width: 321.h,
+                  ),
+                  SizedBox(height: 49.v),
+                  Obx(() => _buildDataView(homeController.dataResponse.value)),
+                  _addOutBreak(),
+                ],
               ),
-              SizedBox(height: 49.v),
-              SizedBox(height: 45.v),
-              Expanded(
-                child: FutureBuilder<DataResponse?>(
-                  future: HomeController().getData(user?.id ?? 0),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.hasData) {
-                      return Column(
-                        children: [
-                          GridView.count(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            crossAxisCount: 2,
-                            children: [
-                              _buildMenuCard(
-                                  snapshot.data?.positiveOutbreaksData,
-                                  "Positive Outbreaks"),
-                              _buildMenuCard(
-                                  snapshot.data?.negativeOutbreaksData,
-                                  "Negative Outbreaks"),
-                            ],
-                          ),
-                          _buildFullWidthMenuCard(
-                              snapshot.data?.outbreaksData, "Outbreaks"),
-                          _addOutBreak(),
-                        ],
-                      );
-                    } else {
-                      return Text('No data available.');
-                    }
-                  },
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildDataView(DataResponse? data) {
+    if (data == null) {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      return Column(
+        children: [
+          GridView.count(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            children: [
+              _buildMenuCard(data.positiveOutbreaksData, "Positive Outbreaks"),
+              _buildMenuCard(data.negativeOutbreaksData, "Negative Outbreaks"),
+            ],
+          ),
+          _buildFullWidthMenuCard(data.outbreaksData, "Outbreaks"),
+        ],
+      );
+    }
   }
 
   Widget _buildMenuCard(int? value, String title) {
@@ -102,9 +80,7 @@ class _HomePageState extends State<HomePage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Text(
               (value ?? 0).toString(),
               style: TextStyle(
@@ -135,9 +111,7 @@ class _HomePageState extends State<HomePage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Text(
               (value ?? 0).toString(),
               style: TextStyle(
@@ -161,7 +135,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             CustomElevatedButton(
               onPressed: () {
-                onTapScreenTitle(context, AppRoutes.mapsPage);
+                onTapScreenTitle(AppRoutes.mapsPage);
               },
               text: "Add out break",
             ),
@@ -192,29 +166,21 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
-            'Logout Confirmation',
-          ),
-          content: Text(
-            'Are you sure you want to logout?',
-          ),
+          title: Text('Logout Confirmation'),
+          content: Text('Are you sure you want to logout?'),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: Colors.blue, fontSize: 12),
-              ),
+              onPressed: () => Get.back(),
+              child: Text('Cancel',
+                  style: TextStyle(color: Colors.blue, fontSize: 12)),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                _handleLogout(context);
+                Get.back();
+                _handleLogout();
               },
-              child: Text(
-                'Logout',
-                style: TextStyle(color: Colors.red, fontSize: 12),
-              ),
+              child: Text('Logout',
+                  style: TextStyle(color: Colors.red, fontSize: 12)),
             ),
           ],
           backgroundColor: Color(0XFF102C57),
@@ -226,16 +192,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void onTapScreenTitle(
-    BuildContext context,
-    String routeName,
-  ) {
-    Navigator.pushNamed(context, routeName);
+  void onTapScreenTitle(String routeName) {
+    Get.toNamed(routeName)?.then((_) {
+      homeController.getData();
+    });
   }
 
-  void _handleLogout(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    userProvider.setUser(null, true);
-    Navigator.pushReplacementNamed(context, AppRoutes.welcomePage);
+  void _handleLogout() {
+    final userController = Get.find<UserController>();
+    userController.setUser(null, true);
+    Get.offAllNamed(AppRoutes.welcomePage);
   }
 }

@@ -2,41 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ppr_disease_reporting/theme/theme_helper.dart';
 import 'package:ppr_disease_reporting/routes/app_routes.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
-import 'provider/user_provider.dart';
+import 'presentation/home/home_controller.dart';
+import 'presentation/maps/maps_controller.dart';
+import 'provider/user_controller.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  final userProvider = UserProvider();
-  await userProvider.loadUser();
+  final userController = Get.put(UserController());
+  await userController.loadUser();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
 
   ThemeHelper().changeTheme('primary');
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => userProvider,
-      child: MyApp(),
-    ),
-  );
+  AppRoutes.init();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-    return MaterialApp(
+    return GetMaterialApp(
       theme: theme,
       title: 'ppr_disease_reporting',
+      initialBinding: AppBindings(),
       debugShowCheckedModeBanner: false,
-      initialRoute: userProvider.user != null
+      initialRoute: Get.find<UserController>().user != null
           ? AppRoutes.homePage
           : AppRoutes.welcomePage,
-      routes: AppRoutes.routes,
+      getPages: AppRoutes.routes,
     );
+  }
+}
+
+class AppBindings extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => HomeController());
+    Get.lazyPut(() => MapsController());
   }
 }

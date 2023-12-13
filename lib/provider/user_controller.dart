@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/login_response.dart';
 
-class UserProvider extends ChangeNotifier {
+class UserController extends GetxController {
   User? _user;
 
   User? get user => _user;
 
-  Future<void> setUser(User? user, bool rememberme) async {
+  Future<void> setUser(User? user, bool rememberMe) async {
     _user = user;
-    notifyListeners();
-    if (rememberme) {
+    update();
+    if (rememberMe) {
       await saveUserInfo(user);
     }
   }
@@ -19,9 +19,9 @@ class UserProvider extends ChangeNotifier {
   Future<void> loadUser() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getString('userId');
-    if (userId != null && userId != "") {
+    if (userId != null && userId.isNotEmpty) {
       _user = User(id: int.parse(userId));
-      notifyListeners();
+      update();
     }
   }
 

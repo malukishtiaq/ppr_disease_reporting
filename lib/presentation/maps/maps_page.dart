@@ -1,152 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ppr_disease_reporting/core/app_export.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_title.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
-import '../../widgets/custom_text_form_field.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geocoding/geocoding.dart';
+import '../../widgets/custom_elevated_button.dart';
+import 'maps_controller.dart';
 
-class MapsPage extends StatefulWidget {
-  MapsPage({Key? key})
-      : super(
-          key: key,
-        );
-
-  @override
-  State<MapsPage> createState() => _MapsPageState();
-}
-
-class _MapsPageState extends State<MapsPage> {
-  final Set<Marker> _markers = {};
-
-  GoogleMapController? _mapController;
-
-  TextEditingController _searchController = TextEditingController();
-
-  String _selectedAddress = '';
-
-  bool rememberme = false;
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
+class MapsPage extends StatelessWidget {
+  final MapsController mapsController = Get.put(MapsController());
 
   @override
   Widget build(BuildContext context) {
-    mediaQueryData = MediaQuery.of(context);
-
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
         body: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 6.h),
-              child: CustomTextFormField(
-                controller: _searchController,
-                suffix: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    _searchLocation();
-                  },
-                ),
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
+            Obx(() {
+              return Expanded(
                 child: Container(
                   color: Colors.white,
-                  width: double.maxFinite,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 50.h,
-                    vertical: 16.v,
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.8,
-                        child: GoogleMap(
-                          onMapCreated: (controller) {
-                            setState(() {
-                              _mapController = controller;
-                            });
-                          },
-                          markers: _markers,
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(37.7749, -122.4194),
-                            zoom: 15.0,
-                          ),
-                          onTap: (LatLng latLng) {
-                            _addMarker(latLng);
-                          },
-                        ),
-                      ),
-                    ],
+                  padding: EdgeInsets.symmetric(vertical: 16.v),
+                  child: GoogleMap(
+                    onMapCreated: mapsController.onMapCreated,
+                    markers: Set.from(mapsController.markers),
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(30.3753, 69.3451),
+                      zoom: 15.0,
+                    ),
+                    onTap: mapsController.onMapTap,
                   ),
                 ),
-              ),
+              );
+            }),
+            Builder(
+              builder: (context) {
+                return Obx(() {
+                  return Text(
+                    'Selected Address: ${mapsController.selectedAddress.value}',
+                    style: theme.textTheme.labelLarge,
+                    textAlign: TextAlign.left,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                });
+              },
             ),
-            Text(
-              'Selected Address: $_selectedAddress',
-              style: TextStyle(fontSize: 18),
-            ),
+            _addOutBreak(),
           ],
         ),
       ),
     );
   }
 
-  void _addMarker(LatLng latLng) {
-    setState(() {
-      _markers.clear();
-      _markers.add(
-        Marker(
-          markerId: MarkerId('selected_location'),
-          position: latLng,
+  Widget _addOutBreak() {
+    return Card(
+      color: theme.colorScheme.onPrimary,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomElevatedButton(
+              onPressed: () async {
+                await mapsController.onSaveDisease();
+              },
+              text: "Save location",
+            ),
+          ],
         ),
-      );
-    });
-
-    _getAddressFromLatLng(latLng);
-  }
-
-  Future<void> _searchLocation() async {
-    try {
-      List<Location> locations =
-          await locationFromAddress(_searchController.text);
-      if (locations.isNotEmpty) {
-        Location location = locations.first;
-        _mapController?.animateCamera(
-          CameraUpdate.newLatLngZoom(
-            LatLng(location.latitude!, location.longitude!),
-            15.0,
-          ),
-        );
-        _addMarker(LatLng(location.latitude!, location.longitude!));
-      }
-    } catch (e) {
-      print('Error searching location: $e');
-    }
-  }
-
-  void _getAddressFromLatLng(LatLng latLng) async {
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        latLng.latitude,
-        latLng.longitude,
-      );
-      if (placemarks.isNotEmpty) {
-        Placemark placemark = placemarks.first;
-        setState(() {
-          _selectedAddress = placemark.street ?? '';
-        });
-      }
-    } catch (e) {
-      print('Error fetching address: $e');
-    }
+      ),
+    );
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -162,12 +88,5 @@ class _MapsPageState extends State<MapsPage> {
         ),
       ],
     );
-  }
-
-  void onTapScreenTitle(
-    BuildContext context,
-    String routeName,
-  ) {
-    Navigator.pushNamed(context, routeName);
   }
 }

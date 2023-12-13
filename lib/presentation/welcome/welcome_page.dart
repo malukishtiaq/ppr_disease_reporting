@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ppr_disease_reporting/core/app_export.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_title.dart';
-import 'package:ppr_disease_reporting/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
 import 'package:ppr_disease_reporting/widgets/custom_elevated_button.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({Key? key})
-      : super(
-          key: key,
-        );
+  const WelcomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    mediaQueryData = MediaQuery.of(context);
+    final mediaQueryData = MediaQuery.of(context);
 
     return SafeArea(
       child: Scaffold(
@@ -51,21 +48,21 @@ class WelcomePage extends StatelessWidget {
               SizedBox(height: 45.v),
               CustomElevatedButton(
                 onPressed: () {
-                  onTapScreenTitle(context, AppRoutes.loginPage);
+                  Get.offNamed(AppRoutes.loginPage);
                 },
                 text: "Login",
               ),
               SizedBox(height: 24.v),
               CustomElevatedButton(
                 onPressed: () {
-                  onTapScreenTitle(context, AppRoutes.mapsPage);
+                  Get.offNamed(AppRoutes.mapsPage);
                 },
                 text: "Maps",
               ),
               SizedBox(height: 24.v),
               CustomElevatedButton(
                 onPressed: () {
-                  onTapScreenTitle(context, AppRoutes.registerPage);
+                  Get.offNamed(AppRoutes.registerPage);
                 },
                 text: "Sign Up",
               ),
@@ -112,12 +109,5 @@ class WelcomePage extends StatelessWidget {
         margin: EdgeInsets.only(left: 45.h),
       ),
     );
-  }
-
-  void onTapScreenTitle(
-    BuildContext context,
-    String routeName,
-  ) {
-    Navigator.pushNamed(context, routeName);
   }
 }

@@ -11,9 +11,10 @@ dependencies:
   intl: ^0.18.0
   google_maps_flutter: ^2.1.0
   geocoding: ^2.1.1
-  provider: ^6.1.1
   shared_preferences: ^2.2.2
-  
+  get: ^4.6.6
+  location: ^4.4.0
+
 dev_dependencies: 
   flutter_test: 
     sdk: flutter

@@ -1,46 +1,41 @@
 import 'dart:convert';
 
+import 'package:ppr_disease_reporting/helper/dialog_helper.dart';
+import 'package:get/get.dart';
+import '../../base_controller.dart';
+import '../../models/registration_result.dart';
 import '../../network/api_service.dart';
+import '../../network/app_exceptions.dart';
 
-class RegisterController {
-  Future<RegistrationResult> register(
+class RegisterController extends GetxController with BaseController {
+  Future<RegistrationResult?> register(
     String fullName,
     String cnic,
     String password,
     String phone,
   ) async {
+    showLoading('Posting data...');
     try {
-      var response = await ApiService.register(fullName, cnic, password, phone);
-      print('');
-      final decodedResponse = jsonDecode(response);
-      return RegistrationResult.fromApiResponse(decodedResponse);
+      final response =
+          await ApiService.register(fullName, cnic, password, phone)
+              .catchError((error) {
+        if (error is BadRequestException) {
+          var apiError = json.decode(error.message!);
+          DialogHelper.showErrorDialog(description: apiError["reason"]);
+        } else {
+          handleError(error);
+        }
+      });
+      hideLoading();
+      if (response != null) {
+        final decodedResponse = jsonDecode(response);
+        return RegistrationResult.fromApiResponse(decodedResponse);
+      }
     } catch (e) {
-      print('Registration failed: $e');
-      throw e; // Re-throw the exception to propagate it to the caller
-    }
-  }
-}
-
-// Create a class to represent the registration result
-class RegistrationResult {
-  final bool success;
-  final String message;
-
-  RegistrationResult(this.success, this.message);
-
-  // Factory method to create a result object from an API response
-  factory RegistrationResult.fromApiResponse(Map<String, dynamic> response) {
-    // Process the API response and create a result object
-    final success = response['success'] ?? false;
-    final message = response['msg'] ?? 'Unknown error';
-
-    // Additional handling for a specific error condition
-    if (!success &&
-        message.contains('User against this CNIC already exists.')) {
-      return RegistrationResult(false,
-          'User with this CNIC already exists. Please use a different CNIC.');
+      return null;
     }
 
-    return RegistrationResult(success, message);
+    hideLoading();
+    return null;
   }
 }
