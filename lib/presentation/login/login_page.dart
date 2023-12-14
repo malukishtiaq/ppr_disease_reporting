@@ -11,19 +11,12 @@ import '../../helper/c_n_i_c_formatter.dart';
 import 'login_controller.dart';
 
 class LoginPage extends GetView<LoginController> {
+  final LoginController controller = Get.put(LoginController());
+
   LoginPage({Key? key}) : super(key: key);
-
-  final TextEditingController CNICController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final RxBool rememberMe = false.obs;
-
   Future<void> _handleLogin() async {
-    final CNIC = CNICFormatter.saveCNICToDatabase(CNICController.text);
-    final password = passwordController.text;
-
     try {
-      final result =
-          await controller.handleLogin(CNIC, password, rememberMe.value);
+      final result = await controller.handleLogin();
 
       if (result.success) {
         Get.snackbar('Success', 'Login successful');
@@ -58,7 +51,7 @@ class LoginPage extends GetView<LoginController> {
 
   Widget _buildCnicField() {
     return CustomTextFormField(
-      controller: CNICController,
+      controller: controller.CNICController,
       validator: (value) {
         RegExp cnicRegex = RegExp(r'^\d{5}-\d{7}-\d$');
         if (!cnicRegex.hasMatch(value ?? "")) {
@@ -76,38 +69,38 @@ class LoginPage extends GetView<LoginController> {
   Widget _buildPasswordField() {
     return CustomTextFormField(
       obscureText: true,
-      controller: passwordController,
+      controller: controller.passwordController,
       textInputAction: TextInputAction.done,
     );
   }
 
   Widget _buildRememberMeRow() {
-    return GestureDetector(
-      onTap: () {
-        rememberMe.toggle();
-      },
-      child: Padding(
-        padding: EdgeInsets.only(left: 16.h),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CustomCheckboxButton(
-              text: "Remember me",
-              value: rememberMe.value,
-              padding: EdgeInsets.symmetric(vertical: 2.v),
-              onChange: (value) {
-                rememberMe.toggle();
-              },
+    return Obx(() => GestureDetector(
+          onTap: () {
+            controller.rememberMe.toggle();
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 16.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomCheckboxButton(
+                  text: "Remember me",
+                  value: controller.rememberMe.value,
+                  padding: EdgeInsets.symmetric(vertical: 2.v),
+                  onChange: (value) {
+                    controller.rememberMe.toggle();
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 3.v),
+                  child: Text("Forget password?",
+                      style: theme.textTheme.labelLarge),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 3.v),
-              child:
-                  Text("Forget password?", style: theme.textTheme.labelLarge),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 
   Widget _buildLoginButton() {

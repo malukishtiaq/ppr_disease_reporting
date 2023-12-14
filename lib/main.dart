@@ -5,7 +5,9 @@ import 'package:ppr_disease_reporting/routes/app_routes.dart';
 import 'package:get/get.dart';
 
 import 'presentation/home/home_controller.dart';
+import 'presentation/login/login_controller.dart';
 import 'presentation/maps/maps_controller.dart';
+import 'presentation/register/register_controller.dart';
 import 'provider/user_controller.dart';
 
 void main() async {
@@ -18,7 +20,7 @@ void main() async {
   ]);
 
   ThemeHelper().changeTheme('primary');
-  AppRoutes.init();
+  Get.put(AppBindings());
   runApp(MyApp());
 }
 
@@ -41,7 +43,9 @@ class MyApp extends StatelessWidget {
 class AppBindings extends Bindings {
   @override
   void dependencies() {
+    Get.put<MapsController>(MapsController());
     Get.lazyPut(() => HomeController());
-    Get.lazyPut(() => MapsController());
+    Get.lazyPut(() => RegisterController());
+    Get.lazyPut(() => LoginController());
   }
 }

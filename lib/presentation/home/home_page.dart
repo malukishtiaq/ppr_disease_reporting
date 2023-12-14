@@ -45,7 +45,11 @@ class HomePage extends StatelessWidget {
 
   Widget _buildDataView(DataResponse? data) {
     if (data == null) {
-      return Center(child: CircularProgressIndicator());
+      return Center(
+          child: Text(
+        'You have not added any records',
+        style: theme.textTheme.labelLarge,
+      ));
     } else {
       return Column(
         children: [

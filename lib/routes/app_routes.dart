@@ -19,18 +19,8 @@ class AppRoutes {
     GetPage(name: welcomePage, page: () => WelcomePage()),
     GetPage(name: loginPage, page: () => LoginPage()),
     GetPage(name: registerPage, page: () => RegisterPage()),
-    GetPage(name: mapsPage, page: () => MapsPage()),
     GetPage(name: homePage, page: () => HomePage()),
     GetPage(name: appNavigationScreen, page: () => AppNavigationScreen()),
+    GetPage(name: mapsPage, page: () => MapsPage()),
   ];
-
-  static void init() {
-    Get.put(AppRoutes());
-    Get.put(WelcomePage());
-    Get.put(LoginPage());
-    Get.put(RegisterPage());
-    Get.put(MapsPage());
-    Get.put(HomePage());
-    Get.put(AppNavigationScreen());
-  }
 }

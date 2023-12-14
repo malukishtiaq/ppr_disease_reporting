@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
-        android:label="ppr_disease_reporting"
+        android:label="PPRDisease Reporting"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyBeSPNzl0o58_Qwg7FW7DhiUMycPlaZthw"/>

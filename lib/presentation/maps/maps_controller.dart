@@ -1,10 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ppr_disease_reporting/models/save_disease.dart';
 import '../../base_controller.dart';
 import '../../helper/dialog_helper.dart';
-import '../../models/save_disease_response.dart';
 import '../../network/api_service.dart';
 import 'package:get/get.dart';
 import '../../network/app_exceptions.dart';
@@ -13,8 +13,15 @@ import '../../provider/user_controller.dart';
 class MapsController extends GetxController with BaseController {
   final RxSet<Marker> markers = <Marker>{}.obs;
   final RxString selectedAddress = ''.obs;
-
+  final RxBool showMap = true.obs;
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController CNICController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final Rx<GoogleMapController?> mapController = Rx<GoogleMapController?>(null);
+  Future<void> nextClicked() async {
+    showMap.toggle();
+  }
 
   Future<void> saveDiseaseData(SaveDisease saveDisease) async {
     try {
@@ -45,6 +52,12 @@ class MapsController extends GetxController with BaseController {
     }
   }
 
+  static String saveCNICToDatabase(String cnicNumber) {
+    String cnicWithoutHyphens = cnicNumber.replaceAll('-', '');
+
+    return cnicWithoutHyphens;
+  }
+
   Future<void> onSaveDisease() async {
     final userController = Get.find<UserController>();
 
@@ -54,11 +67,11 @@ class MapsController extends GetxController with BaseController {
           : LatLng(30.3753, 69.3451);
 
       SaveDisease saveDisease = SaveDisease(
-        name: userController.user?.name ?? "",
-        cnic: userController.user?.cnic ?? "",
+        name: fullNameController.text,
+        cnic: saveCNICToDatabase(CNICController.text),
         location: '${position.latitude},${position.longitude}',
         village: placemark.locality ?? "",
-        phone: userController.user?.phone ?? "",
+        phone: phoneController.text,
         province: placemark.administrativeArea ?? "",
         createdBy: userController.user?.id.toString() ?? "",
       );
@@ -133,5 +146,19 @@ class MapsController extends GetxController with BaseController {
     }
 
     return addressParts.join(', ');
+  }
+
+  @override
+  void onClose() {
+    markers.clear();
+    selectedAddress.value = '';
+    showMap.value = true;
+    fullNameController.clear();
+    CNICController.clear();
+    passwordController.clear();
+    phoneController.clear();
+    mapController.value = null;
+
+    super.onClose();
   }
 }

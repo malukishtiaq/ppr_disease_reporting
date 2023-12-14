@@ -55,46 +55,11 @@ class WelcomePage extends StatelessWidget {
               SizedBox(height: 24.v),
               CustomElevatedButton(
                 onPressed: () {
-                  Get.offNamed(AppRoutes.mapsPage);
-                },
-                text: "Maps",
-              ),
-              SizedBox(height: 24.v),
-              CustomElevatedButton(
-                onPressed: () {
                   Get.offNamed(AppRoutes.registerPage);
                 },
                 text: "Sign Up",
               ),
-              SizedBox(height: 46.v),
-              Text(
-                "Or  via social media",
-                style: theme.textTheme.titleSmall,
-              ),
               SizedBox(height: 13.v),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgFacebook,
-                    height: 21.adaptSize,
-                    width: 21.adaptSize,
-                  ),
-                  CustomImageView(
-                    imagePath: ImageConstant.imgVector,
-                    height: 21.adaptSize,
-                    width: 21.adaptSize,
-                    margin: EdgeInsets.only(left: 15.h),
-                  ),
-                  CustomImageView(
-                    imagePath: ImageConstant.imgVectorPrimary,
-                    height: 21.adaptSize,
-                    width: 21.adaptSize,
-                    margin: EdgeInsets.only(left: 13.h),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5.v),
             ],
           ),
         ),
