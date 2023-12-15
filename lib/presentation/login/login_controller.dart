@@ -21,10 +21,18 @@ class LoginController extends GetxController with BaseController {
   }
 
   Future<LoginResult> handleLogin() async {
-    showLoading('Posting data...');
     String CNIC = saveCNICToDatabase(CNICController.text);
     String password = passwordController.text;
     bool rememberMeValue = rememberMe.value;
+    if (CNIC.isEmpty && password.isEmpty) {
+      return LoginResult.failure("CNIC and password are required");
+    } else if (CNIC.isEmpty) {
+      return LoginResult.failure("CNIC is required");
+    } else if (password.isEmpty) {
+      return LoginResult.failure("Password is required");
+    }
+
+    showLoading('Posting data...');
 
     final response = await ApiService.login(CNIC, password).catchError((error) {
       if (error is BadRequestException) {

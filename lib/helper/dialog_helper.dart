@@ -18,7 +18,7 @@ class DialogHelper {
               ),
               Text(
                 description ?? '',
-                style: Get.textTheme.headline6,
+                style: Get.textTheme.labelSmall,
               ),
               ElevatedButton(
                 onPressed: () {

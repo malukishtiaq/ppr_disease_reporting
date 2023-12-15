@@ -60,6 +60,7 @@ class ApiService {
       'village': saveDisease.village,
       'phone': saveDisease.phone,
       'province': saveDisease.province,
+      'district': saveDisease.district,
       'created_by': saveDisease.createdBy,
     });
 

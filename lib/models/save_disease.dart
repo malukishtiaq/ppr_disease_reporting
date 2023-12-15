@@ -8,6 +8,7 @@ class SaveDisease {
   String createdBy;
   String latitude;
   String longitude;
+  String district;
 
   SaveDisease({
     required this.name,
@@ -19,6 +20,7 @@ class SaveDisease {
     required this.createdBy,
     required this.latitude,
     required this.longitude,
+    required this.district,
   });
 
   factory SaveDisease.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class SaveDisease {
       createdBy: json['created_by'] as String,
       latitude: json['latitude'] as String,
       longitude: json['longitude'] as String,
+      district: json['district'] as String,
     );
   }
 
@@ -46,6 +49,7 @@ class SaveDisease {
       'created_by': createdBy,
       'longitude': longitude,
       'latitude': latitude,
+      'district': district,
     };
   }
 }

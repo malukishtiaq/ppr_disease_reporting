@@ -120,7 +120,7 @@ class MapsPage extends StatelessWidget {
           ),
           SizedBox(height: 13.v),
           _buildCNIC(mapsController),
-          SizedBox(height: 36.v),
+          SizedBox(height: 30.v),
           Padding(
             padding: EdgeInsets.only(left: 6.h),
             child: Text(
