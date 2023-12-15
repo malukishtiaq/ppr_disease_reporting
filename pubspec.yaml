@@ -14,7 +14,9 @@ dependencies:
   shared_preferences: ^2.2.2
   get: ^4.6.6
   location: ^4.4.0
-
+  permission_handler: ^10.0.0
+  sentry_flutter: ^7.10.1
+  
 dev_dependencies: 
   flutter_test: 
     sdk: flutter

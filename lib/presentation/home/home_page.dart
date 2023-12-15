@@ -78,6 +78,7 @@ class HomePage extends StatelessWidget {
           children: [
             Text(
               title,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: theme.colorScheme.onPrimary,
                 fontSize: 14,
@@ -156,11 +157,17 @@ class HomePage extends StatelessWidget {
         margin: EdgeInsets.only(left: 45.h),
       ),
       actions: [
-        AppbarTrailingImage(
-          imagePath: ImageConstant.imgPepiconsPopMenu,
-          margin: EdgeInsets.fromLTRB(34.h, 5.v, 34.h, 10.v),
-          onTap: () => _showLogoutConfirmationDialog(context),
-        ),
+        IconButton(
+          padding: EdgeInsets.fromLTRB(34.h, 5.v, 34.h, 10.v),
+          icon: Icon(
+            Icons.exit_to_app,
+            color: Colors.white,
+            size: 30,
+          ),
+          onPressed: () {
+            _showLogoutConfirmationDialog(context);
+          },
+        )
       ],
     );
   }
@@ -176,7 +183,7 @@ class HomePage extends StatelessWidget {
             TextButton(
               onPressed: () => Get.back(),
               child: Text('Cancel',
-                  style: TextStyle(color: Colors.blue, fontSize: 12)),
+                  style: TextStyle(color: Colors.blue, fontSize: 14)),
             ),
             TextButton(
               onPressed: () {
@@ -184,7 +191,7 @@ class HomePage extends StatelessWidget {
                 _handleLogout();
               },
               child: Text('Logout',
-                  style: TextStyle(color: Colors.red, fontSize: 12)),
+                  style: TextStyle(color: Colors.white, fontSize: 14)),
             ),
           ],
           backgroundColor: Color(0XFF102C57),

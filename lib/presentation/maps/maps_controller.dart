@@ -15,6 +15,7 @@ class MapsController extends GetxController with BaseController {
   final RxString selectedAddress = ''.obs;
   final RxBool showMap = true.obs;
   final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController villageNameController = TextEditingController();
   final TextEditingController CNICController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -46,9 +47,8 @@ class MapsController extends GetxController with BaseController {
         DialogHelper.showErrorDialog(description: 'Failed to save data');
       }
     } catch (e) {
+      Get.back();
       hideLoading();
-      DialogHelper.showErrorDialog(
-          description: 'Failed to save data. Please try again later.');
     }
   }
 
@@ -69,8 +69,10 @@ class MapsController extends GetxController with BaseController {
       SaveDisease saveDisease = SaveDisease(
         name: fullNameController.text,
         cnic: saveCNICToDatabase(CNICController.text),
-        location: '${position.latitude},${position.longitude}',
-        village: placemark.locality ?? "",
+        location: placemark.toJson().toString(),
+        latitude: position.latitude.toString(),
+        longitude: position.longitude.toString(),
+        village: villageNameController.text ?? "",
         phone: phoneController.text,
         province: placemark.administrativeArea ?? "",
         createdBy: userController.user?.id.toString() ?? "",
@@ -85,12 +87,15 @@ class MapsController extends GetxController with BaseController {
   }
 
   void onMapTap(LatLng latLng) {
+    markers.clear();
+    update();
+
     _addMarker(latLng);
     update();
   }
 
   void _addMarker(LatLng latLng) {
-    markers.value = {
+    markers.add(
       Marker(
         markerId: MarkerId('selected_location'),
         position: latLng,
@@ -99,7 +104,7 @@ class MapsController extends GetxController with BaseController {
           _onMarkerDragEnd(newPosition);
         },
       ),
-    };
+    );
     _getAddressFromLatLng(latLng);
   }
 
@@ -154,6 +159,7 @@ class MapsController extends GetxController with BaseController {
     selectedAddress.value = '';
     showMap.value = true;
     fullNameController.clear();
+    villageNameController.clear();
     CNICController.clear();
     passwordController.clear();
     phoneController.clear();

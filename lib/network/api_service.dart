@@ -55,6 +55,8 @@ class ApiService {
       'name': saveDisease.name,
       'cnic': saveDisease.cnic,
       'location': saveDisease.location,
+      'latitude': saveDisease.latitude,
+      'longitude': saveDisease.longitude,
       'village': saveDisease.village,
       'phone': saveDisease.phone,
       'province': saveDisease.province,

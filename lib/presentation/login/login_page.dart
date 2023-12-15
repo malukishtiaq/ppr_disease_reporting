@@ -112,29 +112,34 @@ class LoginPage extends GetView<LoginController> {
   }
 
   Widget _buildSignUpText() {
-    return RichText(
-      text: TextSpan(
-        children: [
-          TextSpan(
-            text: "Don’t have an account? ",
-            style: theme.textTheme.labelLarge,
-          ),
-          WidgetSpan(
-            child: GestureDetector(
-              onTap: () {
-                onTapScreenTitle(AppRoutes.registerPage);
-              },
-              child: Text(
-                "Sign Up",
-                style: CustomTextStyles.labelLargePrimary.copyWith(
-                  decoration: TextDecoration.underline,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "Don’t have an account? ",
+                style: theme.textTheme.labelLarge,
+              ),
+              WidgetSpan(
+                child: GestureDetector(
+                  onTap: () {
+                    onTapScreenTitle(AppRoutes.registerPage);
+                  },
+                  child: Text(
+                    "Sign Up",
+                    style: CustomTextStyles.labelLargePrimary.copyWith(
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-      textAlign: TextAlign.left,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 

@@ -4,14 +4,15 @@ import 'package:ppr_disease_reporting/core/app_export.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_title.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
 import 'package:ppr_disease_reporting/widgets/custom_elevated_button.dart';
+import 'package:location/location.dart' as loc;
+import '../../helper/permision_helper.dart';
+import 'welcome_controller.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({Key? key}) : super(key: key);
+  final WelcomeController controller = Get.put(WelcomeController());
 
   @override
   Widget build(BuildContext context) {
-    final mediaQueryData = MediaQuery.of(context);
-
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
@@ -38,7 +39,7 @@ class WelcomePage extends StatelessWidget {
                 width: 307.h,
                 margin: EdgeInsets.symmetric(horizontal: 11.h),
                 child: Text(
-                  "Welcome to PPR Reporting Top platform to coders",
+                  "Welcome to PPR Reporting",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -47,15 +48,15 @@ class WelcomePage extends StatelessWidget {
               ),
               SizedBox(height: 45.v),
               CustomElevatedButton(
-                onPressed: () {
-                  Get.offNamed(AppRoutes.loginPage);
+                onPressed: () async {
+                  controller.getLocationAndNavigate(AppRoutes.loginPage);
                 },
                 text: "Login",
               ),
               SizedBox(height: 24.v),
               CustomElevatedButton(
-                onPressed: () {
-                  Get.offNamed(AppRoutes.registerPage);
+                onPressed: () async {
+                  controller.getLocationAndNavigate(AppRoutes.registerPage);
                 },
                 text: "Sign Up",
               ),
@@ -65,6 +66,14 @@ class WelcomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> getLocation() async {
+    await PermissionHandler.isFor.locationPermission();
+    loc.Location location = loc.Location();
+    var _currentPosition = await location.getLocation();
+    var longitude = _currentPosition!.longitude.toString();
+    var latitude = _currentPosition!.latitude.toString();
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {

@@ -7,6 +7,7 @@ import 'package:ppr_disease_reporting/widgets/app_bar/appbar_trailing_image.dart
 import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../helper/c_n_i_c_formatter.dart';
+import '../../provider/user_controller.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
 import 'maps_controller.dart';
@@ -29,13 +30,15 @@ class MapsPage extends StatelessWidget {
                       Obx(() {
                         return mapsController.showMap.value
                             ? Container(
-                                height: 500,
-                                padding: EdgeInsets.symmetric(vertical: 16.v),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.8,
+                                padding: EdgeInsets.only(top: 16.v),
                                 child: GoogleMap(
+                                  // position:
                                   onMapCreated: mapsController.onMapCreated,
                                   markers: Set.from(mapsController.markers),
                                   initialCameraPosition: CameraPosition(
-                                    target: LatLng(30.3753, 69.3451),
+                                    target: LatLng(33.6844, 73.0479),
                                     zoom: 15.0,
                                   ),
                                   onTap: mapsController.onMapTap,
@@ -55,7 +58,7 @@ class MapsPage extends StatelessWidget {
                               return Text(
                                 'Selected Address: ${mapsController.selectedAddress.value}',
                                 style: theme.textTheme.labelLarge,
-                                textAlign: TextAlign.left,
+                                textAlign: TextAlign.center,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                               );
@@ -127,6 +130,15 @@ class MapsPage extends StatelessWidget {
           ),
           SizedBox(height: 11.v),
           _buildPhone(mapsController),
+          Padding(
+            padding: EdgeInsets.only(left: 6.h),
+            child: Text(
+              "Village",
+              style: theme.textTheme.titleLarge,
+            ),
+          ),
+          SizedBox(height: 11.v),
+          _buildVillageName(mapsController),
           SizedBox(height: 54.v),
         ],
       ),
@@ -143,6 +155,23 @@ class MapsPage extends StatelessWidget {
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter your full name';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildVillageName(MapsController mapsController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        maxLength: 50,
+        controller: mapsController.villageNameController,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your village name';
           }
           return null;
         },
@@ -249,11 +278,55 @@ class MapsPage extends StatelessWidget {
         margin: EdgeInsets.only(left: 45.h),
       ),
       actions: [
-        AppbarTrailingImage(
-          imagePath: ImageConstant.imgPepiconsPopMenu,
-          margin: EdgeInsets.fromLTRB(34.h, 5.v, 34.h, 10.v),
-        ),
+        IconButton(
+          padding: EdgeInsets.fromLTRB(34.h, 5.v, 34.h, 10.v),
+          icon: Icon(
+            Icons.exit_to_app,
+            color: Colors.white,
+            size: 30,
+          ),
+          onPressed: () {
+            _showLogoutConfirmationDialog(context);
+          },
+        )
       ],
     );
+  }
+
+  Future<void> _showLogoutConfirmationDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Logout Confirmation'),
+          content: Text('Are you sure you want to logout?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Get.back(),
+              child: Text('Cancel',
+                  style: TextStyle(color: Colors.blue, fontSize: 14)),
+            ),
+            TextButton(
+              onPressed: () {
+                Get.back();
+                _handleLogout();
+              },
+              child: Text('Logout',
+                  style: TextStyle(color: Colors.white, fontSize: 14)),
+            ),
+          ],
+          backgroundColor: Color(0XFF102C57),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        );
+      },
+    );
+  }
+
+  void _handleLogout() {
+    final userController = Get.find<UserController>();
+    userController.setUser(null, true);
+    Get.offAllNamed(AppRoutes.welcomePage);
   }
 }
