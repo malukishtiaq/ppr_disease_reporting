@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ppr_disease_reporting/core/app_export.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_title.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../helper/c_n_i_c_formatter.dart';
 import '../../provider/user_controller.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
-import 'maps_controller.dart';
+import 'vaccine_controller.dart';
 
-class MapsPage extends StatelessWidget {
+class VaccinePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
-        body: GetBuilder<MapsController>(builder: (mapsController) {
+        body: GetBuilder<VaccineController>(builder: (controller) {
           return Column(
             children: [
               Expanded(
@@ -27,22 +25,22 @@ class MapsPage extends StatelessWidget {
                   child: Column(
                     children: [
                       Obx(() {
-                        return mapsController.showMap.value
+                        return controller.showMap.value
                             ? Container(
                                 height:
                                     MediaQuery.of(context).size.height * 0.8,
                                 padding: EdgeInsets.only(top: 16.v),
                                 child: GoogleMap(
-                                  onMapCreated: mapsController.onMapCreated,
-                                  markers: Set.from(mapsController.markers),
+                                  onMapCreated: controller.onMapCreated,
+                                  markers: Set.from(controller.markers),
                                   initialCameraPosition: CameraPosition(
                                     target: LatLng(33.6844, 73.0479),
                                     zoom: 15.0,
                                   ),
-                                  onTap: mapsController.onMapTap,
+                                  onTap: controller.onMapTap,
                                 ),
                               )
-                            : _buildForm(mapsController);
+                            : _buildForm(controller);
                       }),
                       Container(
                         width: double.maxFinite,
@@ -54,18 +52,18 @@ class MapsPage extends StatelessWidget {
                           children: [
                             Obx(() {
                               return Text(
-                                'Selected Address: ${mapsController.selectedAddress.value}',
+                                'Selected Address: ${controller.selectedAddress.value}',
                                 style: theme.textTheme.labelLarge,
                                 textAlign: TextAlign.center,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                               );
                             }),
-                            _nextBreak(mapsController),
+                            _nextBreak(controller),
                             Obx(() {
-                              return mapsController.showMap.value
+                              return controller.showMap.value
                                   ? Container()
-                                  : _addOutBreak(mapsController);
+                                  : _addOutBreak(controller);
                             }),
                           ],
                         ),
@@ -81,7 +79,7 @@ class MapsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildForm(MapsController mapsController) {
+  Widget _buildForm(VaccineController vaccineController) {
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.only(
@@ -95,7 +93,7 @@ class MapsPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 1.h),
             child: Text(
-              "Add User Info!",
+              "Add Vaccine Info!",
               style: theme.textTheme.displaySmall,
             ),
           ),
@@ -103,89 +101,111 @@ class MapsPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 2.h),
             child: Text(
-              "Full Name",
+              "Tehsil",
               style: theme.textTheme.titleLarge,
             ),
           ),
           SizedBox(height: 12.v),
-          _buildFullName(mapsController),
+          _buildTehsil(vaccineController),
           Padding(
-            padding: EdgeInsets.only(left: 6.h),
-            child: Text(
-              "Phone No",
-              style: theme.textTheme.titleLarge,
-            ),
-          ),
-          SizedBox(height: 11.v),
-          _buildPhone(mapsController),
-          Padding(
-            padding: EdgeInsets.only(left: 6.h),
+            padding: EdgeInsets.only(left: 2.h),
             child: Text(
               "Village",
               style: theme.textTheme.titleLarge,
             ),
           ),
-          SizedBox(height: 11.v),
-          _buildVillageName(mapsController),
+          SizedBox(height: 12.v),
+          _buildVillageName(vaccineController),
           Padding(
-            padding: EdgeInsets.only(left: 6.h),
+            padding: EdgeInsets.only(left: 2.h),
             child: Text(
-              "Animal Type",
+              "Vaccinator Name",
               style: theme.textTheme.titleLarge,
             ),
           ),
-          SizedBox(height: 11.v),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: theme.colorScheme.onPrimaryContainer,
-              borderRadius: BorderRadius.circular(20.h),
-            ),
-            child: DropdownButton<String>(
-              value: selectedAnimal,
-              itemHeight: 50,
-              style: TextStyle(
-                color: ThemeHelper().textColor,
-              ),
-              onChanged: (String? newValue) {
-                //setState(() {
-                selectedAnimal = newValue!;
-                //});
-              },
-              items: <String>['Goat', 'Sheep', 'Other'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8.0,
-                    ),
-                    child: Text(
-                      value,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: ThemeHelper().textColor,
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-              isExpanded: true,
-              underline: Container(),
-              dropdownColor: Colors.white,
-              iconEnabledColor: ThemeHelper().textColor, //Icon color
+          SizedBox(height: 12.v),
+          _buildFullName(vaccineController),
+          Padding(
+            padding: EdgeInsets.only(left: 2.h),
+            child: Text(
+              "Designation",
+              style: theme.textTheme.titleLarge,
             ),
           ),
+          SizedBox(height: 12.v),
+          _buildDesignation(vaccineController),
+          Padding(
+            padding: EdgeInsets.only(left: 2.h),
+            child: Text(
+              "Hospital",
+              style: theme.textTheme.titleLarge,
+            ),
+          ),
+          SizedBox(height: 12.v),
+          _buildHospital(vaccineController),
+          Padding(
+            padding: EdgeInsets.only(left: 2.h),
+            child: Text(
+              "Contact",
+              style: theme.textTheme.titleLarge,
+            ),
+          ),
+          SizedBox(height: 12.v),
+          _buildPhone(vaccineController),
           SizedBox(height: 54.v),
         ],
       ),
     );
   }
 
+  DecoratedBox dropdown() {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.onPrimaryContainer,
+        borderRadius: BorderRadius.circular(20.h),
+      ),
+      child: DropdownButton<String>(
+        value: selectedAnimal,
+        itemHeight: 50,
+        style: TextStyle(
+          color: ThemeHelper().textColor,
+        ),
+        onChanged: (String? newValue) {
+          //setState(() {
+          selectedAnimal = newValue!;
+          //});
+        },
+        items: <String>['Goat', 'Sheep', 'Other'].map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 8.0,
+              ),
+              child: Text(
+                value,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: ThemeHelper().textColor,
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+        isExpanded: true,
+        underline: Container(),
+        dropdownColor: Colors.white,
+        iconEnabledColor: ThemeHelper().textColor, //Icon color
+      ),
+    );
+  }
+
   String selectedAnimal = "Goat";
-  Widget _buildFullName(MapsController mapsController) {
+  Widget _buildFullName(VaccineController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
         maxLength: 50,
-        controller: mapsController.fullNameController,
+        controller: vaccineController.fullNameController,
         borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -197,12 +217,80 @@ class MapsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildVillageName(MapsController mapsController) {
+  Widget _buildTehsil(VaccineController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
         maxLength: 50,
-        controller: mapsController.villageNameController,
+        controller: vaccineController.tehsilController,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your full name';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildDesignation(VaccineController vaccineController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        maxLength: 50,
+        controller: vaccineController.designationController,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your full name';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildHospital(VaccineController vaccineController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        maxLength: 50,
+        controller: vaccineController.hospitalController,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your full name';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildContact(VaccineController vaccineController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        maxLength: 50,
+        controller: vaccineController.contactController,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your full name';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildVillageName(VaccineController vaccineController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        maxLength: 50,
+        controller: vaccineController.villageNameController,
         borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -214,11 +302,11 @@ class MapsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPhone(MapsController mapsController) {
+  Widget _buildPhone(VaccineController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 2.h),
       child: CustomTextFormField(
-        controller: mapsController.phoneController,
+        controller: vaccineController.contactController,
         textInputAction: TextInputAction.done,
         maxLength: 11,
         textInputType: TextInputType.phone,
@@ -241,7 +329,7 @@ class MapsPage extends StatelessWidget {
     );
   }
 
-  Widget _nextBreak(MapsController mapsController) {
+  Widget _nextBreak(VaccineController vaccineController) {
     return Card(
       color: theme.colorScheme.onPrimary,
       child: Container(
@@ -252,9 +340,9 @@ class MapsPage extends StatelessWidget {
             Obx(() {
               return CustomElevatedButton(
                 onPressed: () async {
-                  await mapsController.nextClicked();
+                  await vaccineController.nextClicked();
                 },
-                text: mapsController.showMap.value ? "Next" : "Go to Map",
+                text: vaccineController.showMap.value ? "Next" : "Go to Map",
               );
             }),
           ],
@@ -263,7 +351,7 @@ class MapsPage extends StatelessWidget {
     );
   }
 
-  Widget _addOutBreak(MapsController mapsController) {
+  Widget _addOutBreak(VaccineController vaccineController) {
     return Card(
       color: theme.colorScheme.onPrimary,
       child: Container(
@@ -273,9 +361,9 @@ class MapsPage extends StatelessWidget {
           children: [
             CustomElevatedButton(
               onPressed: () async {
-                await mapsController.onSaveDisease();
+                await vaccineController.onSaveDisease();
               },
-              text: "Save Out Break",
+              text: "Next",
             ),
           ],
         ),

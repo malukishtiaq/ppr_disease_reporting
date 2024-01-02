@@ -16,7 +16,6 @@ class MapsController extends GetxController with BaseController {
   final RxBool showMap = true.obs;
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController villageNameController = TextEditingController();
-  final TextEditingController CNICController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final Rx<GoogleMapController?> mapController = Rx<GoogleMapController?>(null);
@@ -68,11 +67,11 @@ class MapsController extends GetxController with BaseController {
 
       SaveDisease saveDisease = SaveDisease(
         name: fullNameController.text,
-        cnic: saveCNICToDatabase(CNICController.text),
+        cnic: '',
         location: placemark.toJson().toString(),
         latitude: position.latitude.toString(),
         longitude: position.longitude.toString(),
-        village: villageNameController.text ?? "",
+        village: villageNameController.text,
         phone: phoneController.text,
         province: placemark.administrativeArea ?? "",
         district: placemark.subAdministrativeArea ?? "",
@@ -154,21 +153,6 @@ class MapsController extends GetxController with BaseController {
     return addressParts.join(', ');
   }
 
-//
-//   @override
-//   void onClose() {
-//     markers.clear();
-//     selectedAddress.value = '';
-//     showMap.value = true;
-//     fullNameController.clear();
-//     villageNameController.clear();
-//     CNICController.clear();
-//     passwordController.clear();
-//     phoneController.clear();
-//     mapController.value = null;
-//
-//     super.onClose();
-//   }
   @override
   void onClose() {
     resetData();
@@ -185,7 +169,6 @@ class MapsController extends GetxController with BaseController {
       showMap.value = true;
       fullNameController.clear();
       villageNameController.clear();
-      CNICController.clear();
       passwordController.clear();
       phoneController.clear();
     } catch (e) {

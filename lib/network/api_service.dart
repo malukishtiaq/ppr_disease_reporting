@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:ppr_disease_reporting/models/save_disease.dart';
 
+import '../models/vaccination_data.dart';
+import '../models/vaccination_data_second_request.dart';
 import 'app_exceptions.dart';
 
 class ApiService {
@@ -61,6 +63,40 @@ class ApiService {
       'phone': saveDisease.phone,
       'province': saveDisease.province,
       'district': saveDisease.district,
+      'created_by': saveDisease.createdBy,
+    });
+
+    return await placeApiRequest(request, uri);
+  }
+
+  static Future<dynamic> saveVaccineDataFirst(
+      VaccinationData saveDisease) async {
+    Uri uri = Uri.parse('$baseUrl/save_vaccination_data_first.php');
+    var request = http.MultipartRequest('POST', uri);
+    request.fields.addAll({
+      'village': saveDisease.village,
+      'province': saveDisease.province,
+      'district': saveDisease.district,
+      'created_by': saveDisease.createdBy,
+      'latitude': saveDisease.latitude,
+      'longitude': saveDisease.longitude,
+      'tehsil': saveDisease.tehsil,
+      'vaccinator_name': saveDisease.vaccinatorName,
+      'designation': saveDisease.designation,
+      'hospital': saveDisease.hospital,
+    });
+
+    return await placeApiRequest(request, uri);
+  }
+
+  static Future<dynamic> saveVaccineDataSecond(
+      VaccinationDataSecondRequest saveDisease) async {
+    Uri uri = Uri.parse('$baseUrl/save_vaccination_data_second.php');
+    var request = http.MultipartRequest('POST', uri);
+    request.fields.addAll({
+      // 'village': saveDisease.village,
+      // 'province': saveDisease.province,
+      // 'district': saveDisease.district,
       'created_by': saveDisease.createdBy,
     });
 

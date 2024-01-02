@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:ppr_disease_reporting/core/app_export.dart';
 import 'package:ppr_disease_reporting/models/data_response.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_title.dart';
-import 'package:ppr_disease_reporting/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
 import 'package:ppr_disease_reporting/provider/user_controller.dart';
 import 'package:ppr_disease_reporting/widgets/custom_elevated_button.dart';
@@ -33,7 +32,9 @@ class HomePage extends StatelessWidget {
                   ),
                   SizedBox(height: 49.v),
                   Obx(() => _buildDataView(homeController.dataResponse.value)),
+                  SizedBox(height: 11.v),
                   _addOutBreak(),
+                  _addVaccine(),
                 ],
               ),
             ),
@@ -143,6 +144,26 @@ class HomePage extends StatelessWidget {
                 onTapScreenTitle(AppRoutes.mapsPage);
               },
               text: "Add out break",
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _addVaccine() {
+    return Card(
+      color: theme.colorScheme.onPrimary,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomElevatedButton(
+              onPressed: () {
+                onTapScreenTitle(AppRoutes.mapsPage);
+              },
+              text: "Add vaccine",
             ),
           ],
         ),

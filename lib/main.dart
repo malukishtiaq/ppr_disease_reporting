@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:ppr_disease_reporting/presentation/vacine/vaccine_controller.dart';
 import 'package:ppr_disease_reporting/routes/app_routes.dart';
 import 'package:ppr_disease_reporting/theme/theme_helper.dart';
+import 'presentation/heard_info/heard_controller.dart';
 import 'presentation/home/home_controller.dart';
 import 'presentation/login/login_controller.dart';
 import 'presentation/maps/maps_controller.dart';
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
             initialBinding: AppBindings(),
             debugShowCheckedModeBanner: false,
             initialRoute: Get.find<UserController>().user != null
-                ? AppRoutes.homePage
+                ? AppRoutes.heardPage
                 : AppRoutes.welcomePage,
             getPages: AppRoutes.routes,
           );
@@ -63,6 +65,9 @@ class AppBindings extends Bindings {
   void dependencies() {
     Get.put<WelcomeController>(WelcomeController());
     Get.put<MapsController>(MapsController());
+    Get.lazyPut(() => HomeController());
+    Get.lazyPut(() => VaccineController());
+    Get.lazyPut(() => HeardController());
     Get.lazyPut(() => HomeController());
     Get.lazyPut(() => RegisterController());
     Get.lazyPut(() => LoginController());
