@@ -127,59 +127,12 @@ class MapsPage extends StatelessWidget {
           ),
           SizedBox(height: 11.v),
           _buildVillageName(mapsController),
-          Padding(
-            padding: EdgeInsets.only(left: 6.h),
-            child: Text(
-              "Animal Type",
-              style: theme.textTheme.titleLarge,
-            ),
-          ),
-          SizedBox(height: 11.v),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: theme.colorScheme.onPrimaryContainer,
-              borderRadius: BorderRadius.circular(20.h),
-            ),
-            child: DropdownButton<String>(
-              value: selectedAnimal,
-              itemHeight: 50,
-              style: TextStyle(
-                color: ThemeHelper().textColor,
-              ),
-              onChanged: (String? newValue) {
-                //setState(() {
-                selectedAnimal = newValue!;
-                //});
-              },
-              items: <String>['Goat', 'Sheep', 'Other'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8.0,
-                    ),
-                    child: Text(
-                      value,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: ThemeHelper().textColor,
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-              isExpanded: true,
-              underline: Container(),
-              dropdownColor: Colors.white,
-              iconEnabledColor: ThemeHelper().textColor, //Icon color
-            ),
-          ),
           SizedBox(height: 54.v),
         ],
       ),
     );
   }
 
-  String selectedAnimal = "Goat";
   Widget _buildFullName(MapsController mapsController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),

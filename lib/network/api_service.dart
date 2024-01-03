@@ -94,10 +94,16 @@ class ApiService {
     Uri uri = Uri.parse('$baseUrl/save_vaccination_data_second.php');
     var request = http.MultipartRequest('POST', uri);
     request.fields.addAll({
-      // 'village': saveDisease.village,
-      // 'province': saveDisease.province,
-      // 'district': saveDisease.district,
       'created_by': saveDisease.createdBy,
+      'id': saveDisease.id,
+      'population_goats': saveDisease.populationGoats,
+      'goats_herds': saveDisease.goatsHerds,
+      'population_sheep': saveDisease.populationSheep,
+      'sheep_herds': saveDisease.sheepHerds,
+      'vaccination_status': saveDisease.vaccinationStatus,
+      'last_vaccination_date': saveDisease.lastVaccinationDate,
+      'no_of_sheep_vaccinated': saveDisease.noOfGoatsVaccinated,
+      'no_of_goats_vaccinated': saveDisease.noOfGoatsVaccinated,
     });
 
     return await placeApiRequest(request, uri);

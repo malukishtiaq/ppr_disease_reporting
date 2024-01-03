@@ -14,7 +14,7 @@ import '../../provider/user_controller.dart';
 class VaccineController extends GetxController with BaseController {
   final RxSet<Marker> markers = <Marker>{}.obs;
   final RxString selectedAddress = ''.obs;
-  final RxBool showMap = false.obs;
+  final RxBool showMap = true.obs;
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController villageNameController = TextEditingController();
   final TextEditingController contactController = TextEditingController();

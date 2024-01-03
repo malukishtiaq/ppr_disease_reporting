@@ -24,7 +24,14 @@ class HeardPage extends StatelessWidget {
                   child: Column(
                     children: [
                       _buildForm(controller, context),
-                      _addOutBreak(controller),
+                      Container(
+                        width: double.maxFinite,
+                        padding: EdgeInsets.only(
+                          left: 49.h,
+                          right: 49.h,
+                        ),
+                        child: _addOutBreak(controller),
+                      ),
                     ],
                   ),
                 ),
@@ -116,7 +123,7 @@ class HeardPage extends StatelessWidget {
     );
   }
 
-  DecoratedBox dropdown(HeardController controller) {
+  Widget dropdown(HeardController controller) {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.onPrimaryContainer,
@@ -129,7 +136,9 @@ class HeardPage extends StatelessWidget {
           color: ThemeHelper().textColor,
         ),
         onChanged: (String? newValue) {
-          controller.selectedVaccineStatus.value = newValue!;
+          if (newValue != null) {
+            controller.setSelectedVaccineStatus(newValue);
+          }
         },
         items: controller.vaccineStatusOptions.map((String value) {
           return DropdownMenuItem<String>(
@@ -233,12 +242,10 @@ class HeardPage extends StatelessWidget {
         child: AbsorbPointer(
           absorbing: true,
           child: CustomTextFormField(
-            controller: vaccineController.noSheepController,
+            controller: vaccineController.lastVaccineController,
             textInputAction: TextInputAction.done,
             maxLength: 11,
             textInputType: TextInputType.phone,
-            hintText: '03001234567',
-            hintStyle: TextStyle(color: Colors.grey),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter population of goats';

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../base_controller.dart';
 import '../../helper/dialog_helper.dart';
 import '../../models/vaccination_data_second_request.dart';
@@ -7,6 +8,7 @@ import '../../network/api_service.dart';
 import 'package:get/get.dart';
 import '../../network/app_exceptions.dart';
 import '../../provider/user_controller.dart';
+import '../../routes/app_routes.dart';
 
 class HeardController extends GetxController with BaseController {
   final RxString selectedAddress = ''.obs;
@@ -16,13 +18,18 @@ class HeardController extends GetxController with BaseController {
   final TextEditingController noGoatController = TextEditingController();
   final TextEditingController vaccineStatusController = TextEditingController();
   final TextEditingController lastVaccineController = TextEditingController();
-  final RxString selectedVaccineStatus = 'Unknown'.obs;
   Rx<DateTime> selectedDate = DateTime.now().obs;
+  final RxString selectedVaccineStatus = 'Unknown'.obs;
   final List<String> vaccineStatusOptions = [
     'Vaccinated',
     'Unvaccinated',
     'Unknown'
   ];
+
+  void setSelectedVaccineStatus(String status) {
+    selectedVaccineStatus.value = status;
+    update();
+  }
 
   Future<void> selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
@@ -34,7 +41,12 @@ class HeardController extends GetxController with BaseController {
 
     if (picked != null && picked != selectedDate.value) {
       selectedDate.value = picked;
+      lastVaccineController.text = formatDate(picked);
     }
+  }
+
+  String formatDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
   }
 
   Future<void> saveVaccineData(VaccinationDataSecondRequest saveDisease) async {
@@ -55,7 +67,7 @@ class HeardController extends GetxController with BaseController {
       final decodedResponse = jsonDecode(response);
       if (decodedResponse['success'] == true) {
         resetData();
-        Get.back();
+        onTapScreenTitleAndRemoveUntil();
       } else {
         DialogHelper.showErrorDialog(description: 'Failed to save data');
       }
@@ -63,6 +75,10 @@ class HeardController extends GetxController with BaseController {
       Get.back();
       hideLoading();
     }
+  }
+
+  void onTapScreenTitleAndRemoveUntil() {
+    Get.offAllNamed(AppRoutes.homePage);
   }
 
   static String saveCNICToDatabase(String cnicNumber) {

@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
             initialBinding: AppBindings(),
             debugShowCheckedModeBanner: false,
             initialRoute: Get.find<UserController>().user != null
-                ? AppRoutes.heardPage
+                ? AppRoutes.homePage
                 : AppRoutes.welcomePage,
             getPages: AppRoutes.routes,
           );

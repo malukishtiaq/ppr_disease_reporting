@@ -161,7 +161,7 @@ class HomePage extends StatelessWidget {
           children: [
             CustomElevatedButton(
               onPressed: () {
-                onTapScreenTitle(AppRoutes.mapsPage);
+                onTapScreenTitle(AppRoutes.vaccinePage);
               },
               text: "Add vaccine",
             ),

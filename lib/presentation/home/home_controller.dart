@@ -20,7 +20,6 @@ class HomeController extends GetxController with BaseController {
   }
 
   Future<void> getData() async {
-    print("");
     final userController = Get.find<UserController>();
     try {
       final response = await ApiService.getData(
@@ -39,8 +38,8 @@ class HomeController extends GetxController with BaseController {
         handleError(error);
       }
     } finally {
-      hideLoading(); // This will ensure that hideLoading is called in all cases
+      hideLoading();
     }
-    update(); // Notify the UI to rebuild
+    update();
   }
 }
