@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ppr_disease_reporting/presentation/home/home_page.dart';
 import '../../base_controller.dart';
 import '../../helper/dialog_helper.dart';
 import '../../models/vaccination_data_second_request.dart';
@@ -51,7 +52,7 @@ class HeardController extends GetxController with BaseController {
 
   Future<void> saveVaccineData(VaccinationDataSecondRequest saveDisease) async {
     try {
-      showLoading('Saving data...');
+      //showLoading('Saving data...');
       final response = await ApiService.saveVaccineDataSecond(saveDisease)
           .catchError((error) {
         if (error is BadRequestException) {
@@ -62,7 +63,7 @@ class HeardController extends GetxController with BaseController {
         }
       });
 
-      hideLoading();
+      //hideLoading();
 
       final decodedResponse = jsonDecode(response);
       if (decodedResponse['success'] == true) {
@@ -72,13 +73,21 @@ class HeardController extends GetxController with BaseController {
         DialogHelper.showErrorDialog(description: 'Failed to save data');
       }
     } catch (e) {
-      Get.back();
-      hideLoading();
+      //hideLoading();
+      resetData();
+      onTapScreenTitleAndRemoveUntil();
     }
   }
 
   void onTapScreenTitleAndRemoveUntil() {
-    Get.offAllNamed(AppRoutes.homePage);
+    // Get.offUntil(
+    //   ModalRoute.withName(AppRoutes.homePage) as Route,
+    //   (route) => false,
+    // );
+    Get.offUntil(
+      ModalRoute.withName(AppRoutes.homePage) as Route,
+      (route) => false,
+    );
   }
 
   static String saveCNICToDatabase(String cnicNumber) {

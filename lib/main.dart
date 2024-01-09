@@ -68,7 +68,6 @@ class AppBindings extends Bindings {
     Get.lazyPut(() => HomeController());
     Get.lazyPut(() => VaccineController());
     Get.lazyPut(() => HeardController());
-    Get.lazyPut(() => HomeController());
     Get.lazyPut(() => RegisterController());
     Get.lazyPut(() => LoginController());
   }

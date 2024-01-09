@@ -16,66 +16,68 @@ class VaccinePage extends StatelessWidget {
       child: Scaffold(
         appBar: _buildAppBar(context),
         body: GetBuilder<VaccineController>(builder: (controller) {
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
+          return builderCode(controller, context);
+        }),
+      ),
+    );
+  }
+
+  Column builderCode(VaccineController controller, BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Column(
+              children: [
+                Obx(() {
+                  return controller.showMap.value
+                      ? Container(
+                          height: MediaQuery.of(context).size.height * 0.8,
+                          padding: EdgeInsets.only(top: 16.v),
+                          child: GoogleMap(
+                            onMapCreated: controller.onMapCreated,
+                            markers: Set.from(controller.markers),
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(33.6844, 73.0479),
+                              zoom: 15.0,
+                            ),
+                            onTap: controller.onMapTap,
+                          ),
+                        )
+                      : _buildForm(controller);
+                }),
+                Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.only(
+                    left: 49.h,
+                    right: 49.h,
+                  ),
                   child: Column(
                     children: [
                       Obx(() {
-                        return controller.showMap.value
-                            ? Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.8,
-                                padding: EdgeInsets.only(top: 16.v),
-                                child: GoogleMap(
-                                  onMapCreated: controller.onMapCreated,
-                                  markers: Set.from(controller.markers),
-                                  initialCameraPosition: CameraPosition(
-                                    target: LatLng(33.6844, 73.0479),
-                                    zoom: 15.0,
-                                  ),
-                                  onTap: controller.onMapTap,
-                                ),
-                              )
-                            : _buildForm(controller);
+                        return Text(
+                          'Selected Address: ${controller.selectedAddress.value}',
+                          style: theme.textTheme.labelLarge,
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        );
                       }),
-                      Container(
-                        width: double.maxFinite,
-                        padding: EdgeInsets.only(
-                          left: 49.h,
-                          right: 49.h,
-                        ),
-                        child: Column(
-                          children: [
-                            Obx(() {
-                              return Text(
-                                'Selected Address: ${controller.selectedAddress.value}',
-                                style: theme.textTheme.labelLarge,
-                                textAlign: TextAlign.center,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                              );
-                            }),
-                            _nextBreak(controller),
-                            Obx(() {
-                              return controller.showMap.value
-                                  ? Container()
-                                  : _addOutBreak(controller);
-                            }),
-                          ],
-                        ),
-                      ),
+                      _nextBreak(controller),
+                      Obx(() {
+                        return controller.showMap.value
+                            ? Container()
+                            : _addOutBreak(controller);
+                      }),
                     ],
                   ),
                 ),
-              ),
-            ],
-          );
-        }),
-      ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 

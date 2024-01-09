@@ -12,9 +12,6 @@ import '../../network/app_exceptions.dart';
 import '../../provider/user_controller.dart';
 
 class VaccineController extends GetxController with BaseController {
-  final RxSet<Marker> markers = <Marker>{}.obs;
-  final RxString selectedAddress = ''.obs;
-  final RxBool showMap = true.obs;
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController villageNameController = TextEditingController();
   final TextEditingController contactController = TextEditingController();
@@ -22,6 +19,9 @@ class VaccineController extends GetxController with BaseController {
   final TextEditingController designationController = TextEditingController();
   final TextEditingController hospitalController = TextEditingController();
   final Rx<GoogleMapController?> mapController = Rx<GoogleMapController?>(null);
+  final RxSet<Marker> markers = <Marker>{}.obs;
+  final RxString selectedAddress = ''.obs;
+  final RxBool showMap = true.obs;
   Future<void> nextClicked() async {
     showMap.toggle();
   }
@@ -43,11 +43,11 @@ class VaccineController extends GetxController with BaseController {
 
       final decodedResponse = jsonDecode(response);
       if (decodedResponse['success'] == true) {
+        await resetData();
         Get.toNamed(
           AppRoutes.heardPage,
           arguments: {'id': decodedResponse["id"]},
         );
-        resetData();
       } else {
         DialogHelper.showErrorDialog(description: 'Failed to save data');
       }
@@ -163,14 +163,13 @@ class VaccineController extends GetxController with BaseController {
   @override
   void onClose() {
     resetData();
-    mapController.value = null;
 
     super.onClose();
   }
 
   Future<void> resetData() async {
     try {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration.zero);
       markers.clear();
       selectedAddress.value = '';
       showMap.value = true;
