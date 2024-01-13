@@ -44,10 +44,7 @@ class VaccineController extends GetxController with BaseController {
       final decodedResponse = jsonDecode(response);
       if (decodedResponse['success'] == true) {
         await resetData();
-        Get.toNamed(
-          AppRoutes.heardPage,
-          arguments: {'id': decodedResponse["id"]},
-        );
+        navigateToHeardPage(decodedResponse);
       } else {
         DialogHelper.showErrorDialog(description: 'Failed to save data');
       }
@@ -55,6 +52,13 @@ class VaccineController extends GetxController with BaseController {
       Get.back();
       hideLoading();
     }
+  }
+
+  void navigateToHeardPage(decodedResponse) {
+    Get.toNamed(
+      AppRoutes.heardPage,
+      arguments: {'id': decodedResponse["id"]},
+    );
   }
 
   static String saveCNICToDatabase(String cnicNumber) {
@@ -176,6 +180,9 @@ class VaccineController extends GetxController with BaseController {
       fullNameController.clear();
       villageNameController.clear();
       contactController.clear();
+      tehsilController.clear();
+      designationController.clear();
+      hospitalController.clear();
     } catch (e) {
       print('');
     }

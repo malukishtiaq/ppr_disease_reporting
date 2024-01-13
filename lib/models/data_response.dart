@@ -21,3 +21,22 @@ class DataResponse {
         msg: json['msg'],
       );
 }
+
+class VaccineDataResponse {
+  bool? success;
+  int? vaccineDataCount;
+  int? totalAnimalsVaccinated;
+
+  VaccineDataResponse({
+    this.success,
+    this.vaccineDataCount,
+    this.totalAnimalsVaccinated,
+  });
+
+  factory VaccineDataResponse.fromJson(Map<String, dynamic> json) =>
+      VaccineDataResponse(
+        success: json["success"],
+        vaccineDataCount: json["vaccine_data_count"],
+        totalAnimalsVaccinated: json["total_animals_vaccinated"],
+      );
+}

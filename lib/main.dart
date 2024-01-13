@@ -65,10 +65,10 @@ class AppBindings extends Bindings {
   void dependencies() {
     Get.put<WelcomeController>(WelcomeController());
     Get.put<MapsController>(MapsController());
-    Get.lazyPut(() => HomeController());
-    Get.lazyPut(() => VaccineController());
-    Get.lazyPut(() => HeardController());
-    Get.lazyPut(() => RegisterController());
-    Get.lazyPut(() => LoginController());
+    Get.put<HomeController>(HomeController());
+    Get.put<VaccineController>(VaccineController());
+    Get.put<HeardController>(HeardController());
+    Get.put<RegisterController>(RegisterController());
+    Get.put<LoginController>(LoginController());
   }
 }

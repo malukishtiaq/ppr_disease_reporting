@@ -50,6 +50,14 @@ class ApiService {
     return await placeApiRequest(request, uri);
   }
 
+  static Future<dynamic> getVaccineData({int loggedInUserId = 0}) async {
+    Uri uri = Uri.parse('$baseUrl/get_vaccine_data.php');
+    var request = http.MultipartRequest('POST', uri);
+    request.fields.addAll({'user_id': loggedInUserId.toString()});
+
+    return await placeApiRequest(request, uri);
+  }
+
   static Future<dynamic> saveDiseaseData(SaveDisease saveDisease) async {
     Uri uri = Uri.parse('$baseUrl/save_disease_data.php');
     var request = http.MultipartRequest('POST', uri);

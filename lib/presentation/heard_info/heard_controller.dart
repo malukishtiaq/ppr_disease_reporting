@@ -80,14 +80,14 @@ class HeardController extends GetxController with BaseController {
   }
 
   void onTapScreenTitleAndRemoveUntil() {
-    // Get.offUntil(
-    //   ModalRoute.withName(AppRoutes.homePage) as Route,
-    //   (route) => false,
-    // );
-    Get.offUntil(
-      ModalRoute.withName(AppRoutes.homePage) as Route,
-      (route) => false,
-    );
+    try {
+      Get.offUntil(
+        ModalRoute.withName(AppRoutes.homePage) as Route,
+        (route) => false,
+      );
+    } catch (e) {
+      Get.offAll(HomePage());
+    }
   }
 
   static String saveCNICToDatabase(String cnicNumber) {
@@ -139,6 +139,11 @@ class HeardController extends GetxController with BaseController {
       sheepPopController.clear();
       goatPopController.clear();
       noSheepController.clear();
+      noGoatController.clear();
+      vaccineStatusController.clear();
+      lastVaccineController.clear();
+      selectedDate.value = DateTime.now();
+      selectedVaccineStatus.value = 'Unknown';
     } catch (e) {
       print('');
     }

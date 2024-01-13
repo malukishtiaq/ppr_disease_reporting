@@ -32,9 +32,26 @@ class HomePage extends StatelessWidget {
                   ),
                   SizedBox(height: 49.v),
                   Obx(() => _buildDataView(homeController.dataResponse.value)),
+                  if (homeController.isUserFarmar.value)
+                    Obx(() {
+                      if (homeController.isUserFarmar.value) {
+                        return Container();
+                      } else {
+                        return _buildVaccineDataView(
+                            homeController.vaccineDataResponse.value);
+                      }
+                    }),
+                  Obx(() => _buildVaccineDataView(
+                      homeController.vaccineDataResponse.value)),
                   SizedBox(height: 11.v),
                   _addOutBreak(),
-                  _addVaccine(),
+                  Obx(() {
+                    if (homeController.isUserFarmar.value) {
+                      return Container();
+                    } else {
+                      return _addVaccine();
+                    }
+                  }),
                 ],
               ),
             ),
@@ -64,6 +81,30 @@ class HomePage extends StatelessWidget {
             ],
           ),
           _buildFullWidthMenuCard(data.outbreaksData, "Outbreaks"),
+        ],
+      );
+    }
+  }
+
+  Widget _buildVaccineDataView(VaccineDataResponse? data) {
+    if (data == null) {
+      return Center(
+          child: Text(
+        'You have not added any records',
+        style: theme.textTheme.labelLarge,
+      ));
+    } else {
+      return Column(
+        children: [
+          GridView.count(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            children: [
+              _buildMenuCard(data.totalAnimalsVaccinated, "Total Animals"),
+              _buildMenuCard(data.vaccineDataCount, "Vaccine Data"),
+            ],
+          ),
         ],
       );
     }

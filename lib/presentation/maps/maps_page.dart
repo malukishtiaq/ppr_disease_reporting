@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ppr_disease_reporting/core/app_export.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/appbar_title.dart';
+import 'package:ppr_disease_reporting/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../helper/c_n_i_c_formatter.dart';
@@ -33,6 +34,7 @@ class MapsPage extends StatelessWidget {
                                     MediaQuery.of(context).size.height * 0.8,
                                 padding: EdgeInsets.only(top: 16.v),
                                 child: GoogleMap(
+                                  // position:
                                   onMapCreated: mapsController.onMapCreated,
                                   markers: Set.from(mapsController.markers),
                                   initialCameraPosition: CameraPosition(
@@ -110,6 +112,16 @@ class MapsPage extends StatelessWidget {
           SizedBox(height: 12.v),
           _buildFullName(mapsController),
           Padding(
+            padding: EdgeInsets.only(left: 1.h),
+            child: Text(
+              "CNIC",
+              style: theme.textTheme.titleLarge,
+            ),
+          ),
+          SizedBox(height: 13.v),
+          _buildCNIC(mapsController),
+          SizedBox(height: 30.v),
+          Padding(
             padding: EdgeInsets.only(left: 6.h),
             child: Text(
               "Phone No",
@@ -163,6 +175,29 @@ class MapsPage extends StatelessWidget {
           }
           return null;
         },
+      ),
+    );
+  }
+
+  Widget _buildCNIC(MapsController mapsController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 2.h),
+      child: CustomTextFormField(
+        controller: mapsController.CNICController,
+        hintText: '12345-1234567-1',
+        hintStyle: TextStyle(color: Colors.grey),
+        validator: (value) {
+          RegExp cnicRegex = RegExp(r'^\d{5}-\d{7}-\d$');
+
+          if (!cnicRegex.hasMatch(value ?? "")) {
+            return 'Invalid CNIC format';
+          }
+          return null;
+        },
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          CNICFormatter(),
+        ],
       ),
     );
   }

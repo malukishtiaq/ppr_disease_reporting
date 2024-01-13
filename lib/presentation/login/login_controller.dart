@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ppr_disease_reporting/models/login_response.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,10 @@ class LoginController extends GetxController with BaseController {
   Future<LoginResult> handleLogin() async {
     String CNIC = saveCNICToDatabase(CNICController.text);
     String password = passwordController.text;
+    if (kDebugMode) {
+      CNIC = '1234123412343';
+      password = '1234';
+    }
     bool rememberMeValue = rememberMe.value;
     if (CNIC.isEmpty && password.isEmpty) {
       return LoginResult.failure("CNIC and password are required");
