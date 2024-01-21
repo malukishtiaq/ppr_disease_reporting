@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:ppr_disease_reporting/models/save_disease.dart';
 
@@ -92,6 +93,11 @@ class ApiService {
       'vaccinator_name': saveDisease.vaccinatorName,
       'designation': saveDisease.designation,
       'hospital': saveDisease.hospital,
+      'contact_no': saveDisease.vaccinatorContactNo,
+      'farmer_name': saveDisease.farmerName,
+      'farmer_phone': saveDisease.farmerContact,
+      'vaccination_status': saveDisease.vaccinationStatus,
+      'last_vaccination_date': saveDisease.lastVaccinationDate,
     });
 
     return await placeApiRequest(request, uri);
@@ -112,6 +118,54 @@ class ApiService {
       'last_vaccination_date': saveDisease.lastVaccinationDate,
       'no_of_sheep_vaccinated': saveDisease.noOfGoatsVaccinated,
       'no_of_goats_vaccinated': saveDisease.noOfGoatsVaccinated,
+    });
+
+    return await placeApiRequest(request, uri);
+  }
+
+  static Future<dynamic> saveVaccineDataSheep(
+      SaveVaccinationDataSheep saveDisease) async {
+    Uri uri = Uri.parse('$baseUrl/save_vaccination_data_sheep.php');
+    var request = http.MultipartRequest('POST', uri);
+    request.fields.addAll({
+      'created_by': saveDisease.createdBy,
+      'id': saveDisease.id,
+      'specie': saveDisease.specie,
+      'vaccine_type': saveDisease.vaccineType,
+      'sheep_zero_to_three': saveDisease.sheepZeroToThree,
+      'sheep_four_to_twelve': saveDisease.sheepFourToTwelve,
+      'sheep_four_to_twelve_vaccinated':
+          saveDisease.sheepFourToTwelveVaccinated,
+      'sheep_thirteen_to_twentyfour': saveDisease.sheepThirteenToTwentyFour,
+      'sheep_thirteen_to_twentyfour_vaccinated':
+          saveDisease.sheepThirteenToTwentyFourVaccinated,
+      'sheep_twentyfour_plus': saveDisease.sheepTwentyFourPlus,
+      'sheep_twentyfour_plus_vaccinated':
+          saveDisease.sheepTwentyFourPlusVaccinated,
+    });
+
+    return await placeApiRequest(request, uri);
+  }
+
+  static Future<dynamic> saveVaccineDataGoat(
+      SaveVaccinationDataSheep saveDisease) async {
+    Uri uri = Uri.parse('$baseUrl/save_vaccination_data_goats.php');
+    var request = http.MultipartRequest('POST', uri);
+    request.fields.addAll({
+      'created_by': saveDisease.createdBy,
+      'id': saveDisease.id,
+      'specie': saveDisease.specie,
+      'vaccine_type': saveDisease.vaccineType,
+      'sheep_zero_to_three': saveDisease.sheepZeroToThree,
+      'sheep_four_to_twelve': saveDisease.sheepFourToTwelve,
+      'sheep_four_to_twelve_vaccinated':
+          saveDisease.sheepFourToTwelveVaccinated,
+      'sheep_thirteen_to_twentyfour': saveDisease.sheepThirteenToTwentyFour,
+      'sheep_thirteen_to_twentyfour_vaccinated':
+          saveDisease.sheepThirteenToTwentyFourVaccinated,
+      'sheep_twentyfour_plus': saveDisease.sheepTwentyFourPlus,
+      'sheep_twentyfour_plus_vaccinated':
+          saveDisease.sheepTwentyFourPlusVaccinated,
     });
 
     return await placeApiRequest(request, uri);

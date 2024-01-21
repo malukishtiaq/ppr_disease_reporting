@@ -4,11 +4,14 @@ import 'package:get/get.dart';
 import 'package:ppr_disease_reporting/presentation/vacine/vaccine_controller.dart';
 import 'package:ppr_disease_reporting/routes/app_routes.dart';
 import 'package:ppr_disease_reporting/theme/theme_helper.dart';
-import 'presentation/heard_info/heard_controller.dart';
+import 'presentation/goat/goat_controller.dart';
+import 'presentation/mixed/mixed_controller.dart';
+import 'presentation/sheep/sheep_controller.dart';
 import 'presentation/home/home_controller.dart';
 import 'presentation/login/login_controller.dart';
 import 'presentation/maps/maps_controller.dart';
 import 'presentation/register/register_controller.dart';
+import 'presentation/speci_vaccine/speci_vaccine_controller.dart';
 import 'presentation/welcome/welcome_controller.dart';
 import 'provider/user_controller.dart';
 import 'helper/sentry_helper.dart';
@@ -67,7 +70,10 @@ class AppBindings extends Bindings {
     Get.put<MapsController>(MapsController());
     Get.put<HomeController>(HomeController());
     Get.put<VaccineController>(VaccineController());
-    Get.put<HeardController>(HeardController());
+    Get.put<SheepDataController>(SheepDataController());
+    Get.put<GoatDataController>(GoatDataController());
+    Get.put<SpeciVaccineController>(SpeciVaccineController());
+    Get.put<MixedDataController>(MixedDataController());
     Get.put<RegisterController>(RegisterController());
     Get.put<LoginController>(LoginController());
   }

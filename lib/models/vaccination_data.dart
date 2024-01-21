@@ -25,10 +25,13 @@ class VaccinationData {
   String vaccineBalance;
   String storeIncharge;
   String farmerName;
+  String farmerContact;
   String phoneNo;
   String noOfSheepVaccinated;
   String noOfGoatsVaccinated;
   String createdBy;
+
+  String vaccinatorContactNo;
 
   VaccinationData({
     this.latitude = '',
@@ -39,13 +42,12 @@ class VaccinationData {
     this.village = '',
     this.vaccinatorName = '',
     this.designation = '',
+    this.vaccinatorContactNo = '',
     this.hospital = '',
     this.populationGoats = '',
     this.goatsHerds = '',
     this.populationSheep = '',
     this.sheepHerds = '',
-    this.vaccinationStatus = '',
-    this.lastVaccinationDate = '',
     this.totalDosesIssued = '',
     this.issuedBy = '',
     this.totalDosesReceived = '',
@@ -57,10 +59,13 @@ class VaccinationData {
     this.vaccineBalance = '',
     this.storeIncharge = '',
     this.farmerName = '',
+    this.farmerContact = '',
     this.phoneNo = '',
     this.noOfSheepVaccinated = '',
     this.noOfGoatsVaccinated = '',
     this.createdBy = '',
+    this.lastVaccinationDate = '',
+    this.vaccinationStatus = '',
   });
 
   // Convert object to JSON
@@ -74,6 +79,7 @@ class VaccinationData {
       'village': village,
       'vaccinator_name': vaccinatorName,
       'designation': designation,
+      'contact_no': vaccinatorContactNo,
       'hospital': hospital,
       'population_goats': populationGoats,
       'goats_herds': goatsHerds,
@@ -92,6 +98,7 @@ class VaccinationData {
       'vaccine_balance': vaccineBalance,
       'store_incharge': storeIncharge,
       'farmer_name': farmerName,
+      'farmer_contact': farmerContact,
       'phone_no': phoneNo,
       'no_of_sheep_vaccinated': noOfSheepVaccinated,
       'no_of_goats_vaccinated': noOfGoatsVaccinated,
@@ -110,13 +117,12 @@ class VaccinationData {
       village: json['village'] ?? '',
       vaccinatorName: json['vaccinator_name'] ?? '',
       designation: json['designation'] ?? '',
+      vaccinatorContactNo: json['contact_no'] ?? '',
       hospital: json['hospital'] ?? '',
       populationGoats: json['population_goats'] ?? '',
       goatsHerds: json['goats_herds'] ?? '',
       populationSheep: json['population_sheep'] ?? '',
       sheepHerds: json['sheep_herds'] ?? '',
-      vaccinationStatus: json['vaccination_status'] ?? '',
-      lastVaccinationDate: json['last_vaccination_date'] ?? '',
       totalDosesIssued: json['total_doses_issued'] ?? '',
       issuedBy: json['issued_by'] ?? '',
       totalDosesReceived: json['total_doses_received'] ?? '',
@@ -128,6 +134,7 @@ class VaccinationData {
       vaccineBalance: json['vaccine_balance'] ?? '',
       storeIncharge: json['store_incharge'] ?? '',
       farmerName: json['farmer_name'] ?? '',
+      farmerContact: json['farmer_contact'] ?? '',
       phoneNo: json['phone_no'] ?? '',
       noOfSheepVaccinated: json['no_of_sheep_vaccinated'] ?? '',
       noOfGoatsVaccinated: json['no_of_goats_vaccinated'] ?? '',

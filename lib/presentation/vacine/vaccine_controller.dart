@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import '../../base_controller.dart';
 import '../../core/app_export.dart';
 import '../../helper/dialog_helper.dart';
@@ -13,17 +14,57 @@ import '../../provider/user_controller.dart';
 
 class VaccineController extends GetxController with BaseController {
   final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController farmerNameController = TextEditingController();
+  final TextEditingController farmerContactController = TextEditingController();
   final TextEditingController villageNameController = TextEditingController();
   final TextEditingController contactController = TextEditingController();
   final TextEditingController tehsilController = TextEditingController();
   final TextEditingController designationController = TextEditingController();
   final TextEditingController hospitalController = TextEditingController();
   final Rx<GoogleMapController?> mapController = Rx<GoogleMapController?>(null);
+  final TextEditingController lastVaccineController = TextEditingController();
   final RxSet<Marker> markers = <Marker>{}.obs;
   final RxString selectedAddress = ''.obs;
   final RxBool showMap = true.obs;
+  final RxBool isVaccinated = false.obs;
+  final RxString selectedVaccineStatus = 'Unknown'.obs;
+  Rx<DateTime> selectedDate = DateTime.now().obs;
+  final List<String> vaccineStatusOptions = [
+    'Vaccinated',
+    'Unvaccinated',
+    'Unknown'
+  ];
+
+  void setSelectedVaccineStatus(String status) {
+    selectedVaccineStatus.value = status;
+    if (status == "Vaccinated") {
+      isVaccinated.value = true;
+    } else {
+      isVaccinated.value = false;
+    }
+    update();
+  }
+
   Future<void> nextClicked() async {
     showMap.toggle();
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate.value,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null && picked != selectedDate.value) {
+      selectedDate.value = picked;
+      lastVaccineController.text = formatDate(picked);
+    }
+  }
+
+  String formatDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
   }
 
   Future<void> saveVaccineData(VaccinationData saveDisease) async {
@@ -56,7 +97,7 @@ class VaccineController extends GetxController with BaseController {
 
   void navigateToHeardPage(decodedResponse) {
     Get.toNamed(
-      AppRoutes.heardPage,
+      AppRoutes.speciVaccine,
       arguments: {'id': decodedResponse["id"]},
     );
   }
@@ -86,10 +127,25 @@ class VaccineController extends GetxController with BaseController {
         designation: designationController.text,
         hospital: hospitalController.text,
         phoneNo: contactController.text,
+        vaccinationStatus: getStatusValue,
+        lastVaccinationDate: lastVaccineController.text,
+        farmerContact: farmerContactController.text,
+        farmerName: farmerNameController.text,
         createdBy: userController.user?.id.toString() ?? "",
       );
 
       await saveVaccineData(saveDisease);
+    }
+  }
+
+  String get getStatusValue {
+    String status = selectedVaccineStatus.value;
+    if (status == "Vaccinated") {
+      return "1";
+    } else if (status == "Unvaccinated") {
+      return "2";
+    } else {
+      return "3";
     }
   }
 

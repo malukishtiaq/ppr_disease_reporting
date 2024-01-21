@@ -32,17 +32,14 @@ class HomePage extends StatelessWidget {
                   ),
                   SizedBox(height: 49.v),
                   Obx(() => _buildDataView(homeController.dataResponse.value)),
-                  if (homeController.isUserFarmar.value)
-                    Obx(() {
-                      if (homeController.isUserFarmar.value) {
-                        return Container();
-                      } else {
-                        return _buildVaccineDataView(
-                            homeController.vaccineDataResponse.value);
-                      }
-                    }),
-                  Obx(() => _buildVaccineDataView(
-                      homeController.vaccineDataResponse.value)),
+                  Obx(() {
+                    if (homeController.isUserFarmar.value) {
+                      return Container();
+                    } else {
+                      return _buildVaccineDataView(
+                          homeController.vaccineDataResponse.value);
+                    }
+                  }),
                   SizedBox(height: 11.v),
                   _addOutBreak(),
                   Obx(() {
@@ -90,7 +87,7 @@ class HomePage extends StatelessWidget {
     if (data == null) {
       return Center(
           child: Text(
-        'You have not added any records',
+        'You have not added any vaccine records',
         style: theme.textTheme.labelLarge,
       ));
     } else {

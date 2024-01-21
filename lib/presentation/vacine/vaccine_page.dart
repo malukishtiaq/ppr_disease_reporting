@@ -45,7 +45,7 @@ class VaccinePage extends StatelessWidget {
                             onTap: controller.onMapTap,
                           ),
                         )
-                      : _buildForm(controller);
+                      : _buildForm(controller, context);
                 }),
                 Container(
                   width: double.maxFinite,
@@ -81,7 +81,7 @@ class VaccinePage extends StatelessWidget {
     );
   }
 
-  Widget _buildForm(VaccineController vaccineController) {
+  Widget _buildForm(VaccineController vaccineController, context) {
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.only(
@@ -153,37 +153,105 @@ class VaccinePage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12.v),
-          _buildPhone(vaccineController),
+          _buildVaccinatorContact(vaccineController),
+          Padding(
+            padding: EdgeInsets.only(left: 2.h),
+            child: Text(
+              "Farmer Name",
+              style: theme.textTheme.titleLarge,
+            ),
+          ),
+          SizedBox(height: 12.v),
+          _buildFarmerName(vaccineController),
+          Padding(
+            padding: EdgeInsets.only(left: 2.h),
+            child: Text(
+              "Farmer Contact",
+              style: theme.textTheme.titleLarge,
+            ),
+          ),
+          SizedBox(height: 12.v),
+          _buildFarmerPhone(vaccineController),
+          Padding(
+            padding: EdgeInsets.only(left: 2.h),
+            child: Text(
+              "Previous Vaccination Status",
+              style: theme.textTheme.titleLarge,
+            ),
+          ),
+          SizedBox(height: 12.v),
+          dropdown(vaccineController),
+          SizedBox(height: 25.v),
+          Obx(() {
+            return vaccineController.isVaccinated.value
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 2.h),
+                          child: Text(
+                            "Last Vaccination Date",
+                            style: theme.textTheme.titleLarge,
+                          ),
+                        ),
+                        SizedBox(height: 12.v),
+                        _buildPhoneVaccinationDate(vaccineController, context),
+                      ])
+                : Container();
+          }),
           SizedBox(height: 54.v),
         ],
       ),
     );
   }
 
-  DecoratedBox dropdown() {
+  Widget _buildPhoneVaccinationDate(
+      VaccineController vaccineController, context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 2.h),
+      child: GestureDetector(
+        onTap: () => vaccineController.selectDate(context),
+        child: AbsorbPointer(
+          absorbing: true,
+          child: CustomTextFormField(
+            controller: vaccineController.lastVaccineController,
+            textInputAction: TextInputAction.done,
+            maxLength: 11,
+            textInputType: TextInputType.phone,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter population of goats';
+              }
+              return null;
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget dropdown(VaccineController controller) {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.onPrimaryContainer,
         borderRadius: BorderRadius.circular(20.h),
       ),
       child: DropdownButton<String>(
-        value: selectedAnimal,
+        value: controller.selectedVaccineStatus.value,
         itemHeight: 50,
-        style: TextStyle(
+        style: theme.textTheme.bodyLarge?.copyWith(
           color: ThemeHelper().textColor,
         ),
         onChanged: (String? newValue) {
-          //setState(() {
-          selectedAnimal = newValue!;
-          //});
+          if (newValue != null) {
+            controller.setSelectedVaccineStatus(newValue);
+          }
         },
-        items: <String>['Goat', 'Sheep', 'Other'].map((String value) {
+        items: controller.vaccineStatusOptions.map((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
-              padding: const EdgeInsets.only(
-                left: 8.0,
-              ),
+              padding: const EdgeInsets.only(left: 8.0),
               child: Text(
                 value,
                 style: theme.textTheme.bodyLarge?.copyWith(
@@ -201,7 +269,6 @@ class VaccinePage extends StatelessWidget {
     );
   }
 
-  String selectedAnimal = "Goat";
   Widget _buildFullName(VaccineController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
@@ -212,6 +279,40 @@ class VaccinePage extends StatelessWidget {
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter your full name';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildVaccinatorContact(VaccineController vaccineController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        maxLength: 50,
+        controller: vaccineController.contactController,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your farmer name';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildFarmerName(VaccineController vaccineController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        maxLength: 50,
+        controller: vaccineController.farmerNameController,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your farmer name';
           }
           return null;
         },
@@ -253,16 +354,16 @@ class VaccinePage extends StatelessWidget {
     );
   }
 
-  Widget _buildHospital(VaccineController vaccineController) {
+  Widget _buildFarmerPhone(VaccineController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
         maxLength: 50,
-        controller: vaccineController.hospitalController,
+        controller: vaccineController.farmerContactController,
         borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please enter your full name';
+            return 'Please enter your farmer name';
           }
           return null;
         },
@@ -270,12 +371,12 @@ class VaccinePage extends StatelessWidget {
     );
   }
 
-  Widget _buildContact(VaccineController vaccineController) {
+  Widget _buildHospital(VaccineController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
         maxLength: 50,
-        controller: vaccineController.contactController,
+        controller: vaccineController.hospitalController,
         borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -298,33 +399,6 @@ class VaccinePage extends StatelessWidget {
           if (value == null || value.isEmpty) {
             return 'Please enter your village name';
           }
-          return null;
-        },
-      ),
-    );
-  }
-
-  Widget _buildPhone(VaccineController vaccineController) {
-    return Padding(
-      padding: EdgeInsets.only(left: 2.h),
-      child: CustomTextFormField(
-        controller: vaccineController.contactController,
-        textInputAction: TextInputAction.done,
-        maxLength: 11,
-        textInputType: TextInputType.phone,
-        hintText: '03001234567',
-        hintStyle: TextStyle(color: Colors.grey),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter your phone number';
-          }
-
-          RegExp phoneRegex = RegExp(r'^\d{11}$');
-
-          if (!phoneRegex.hasMatch(value)) {
-            return 'Invalid phone number format. It should be 11 digits';
-          }
-
           return null;
         },
       ),

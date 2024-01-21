@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:ppr_disease_reporting/models/data_response.dart';
 
 import '../../base_controller.dart';
@@ -24,7 +25,11 @@ class HomeController extends GetxController with BaseController {
 
   Future<void> getData() async {
     final userController = Get.find<UserController>();
-    isUserFarmar.value = userController.user?.accountType == 4 ? true : false;
+    isUserFarmar.value = kDebugMode
+        ? false
+        : userController.user?.accountType != 4
+            ? true
+            : false;
     try {
       final response = await ApiService.getData(
           loggedInUserId: userController.user?.id ?? 0);

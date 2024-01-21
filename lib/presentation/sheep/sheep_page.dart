@@ -6,15 +6,15 @@ import 'package:ppr_disease_reporting/widgets/app_bar/custom_app_bar.dart';
 import '../../provider/user_controller.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
-import 'heard_controller.dart';
+import 'sheep_controller.dart';
 
-class HeardPage extends StatelessWidget {
+class SheepPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
-        body: GetBuilder<HeardController>(builder: (controller) {
+        body: GetBuilder<SheepDataController>(builder: (controller) {
           return Column(
             children: [
               Expanded(
@@ -43,7 +43,7 @@ class HeardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildForm(HeardController vaccineController, context) {
+  Widget _buildForm(SheepDataController vaccineController, context) {
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.only(
@@ -57,7 +57,7 @@ class HeardPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 1.h),
             child: Text(
-              "Add Herd Info!",
+              "Add Sheep Info!",
               style: theme.textTheme.displaySmall,
             ),
           ),
@@ -65,65 +65,48 @@ class HeardPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 2.h),
             child: Text(
-              "Popupation of Sheep",
+              "Age 0-3 months",
               style: theme.textTheme.titleLarge,
             ),
           ),
           SizedBox(height: 12.v),
-          _buildPopulationOfSheep(vaccineController),
+          _buildZeroToThree(vaccineController),
           Padding(
             padding: EdgeInsets.only(left: 2.h),
             child: Text(
-              "No of Sheep Herds",
+              "Age 4 to 12 months",
+              style: theme.textTheme.titleLarge,
+            ),
+          ),
+          _buildZeroToThree(vaccineController),
+          _buildZeroToThree(vaccineController),
+          Padding(
+            padding: EdgeInsets.only(left: 2.h),
+            child: Text(
+              "12 to 24 months",
               style: theme.textTheme.titleLarge,
             ),
           ),
           SizedBox(height: 12.v),
           _buildNumberOfSheepHerds(vaccineController),
+          _buildNumberOfSheepHerds(vaccineController),
           Padding(
             padding: EdgeInsets.only(left: 2.h),
             child: Text(
-              "Population of Goats",
+              "> 24 months",
               style: theme.textTheme.titleLarge,
             ),
           ),
           SizedBox(height: 12.v),
           _buildPopulationOfGoats(vaccineController),
-          Padding(
-            padding: EdgeInsets.only(left: 2.h),
-            child: Text(
-              "No of Goats Herds",
-              style: theme.textTheme.titleLarge,
-            ),
-          ),
-          SizedBox(height: 12.v),
-          _buildNumberOfGoatHerds(vaccineController),
-          Padding(
-            padding: EdgeInsets.only(left: 2.h),
-            child: Text(
-              "Present Vaccination Status",
-              style: theme.textTheme.titleLarge,
-            ),
-          ),
-          SizedBox(height: 12.v),
-          dropdown(vaccineController),
-          SizedBox(height: 25.v),
-          Padding(
-            padding: EdgeInsets.only(left: 2.h),
-            child: Text(
-              "Last Vaccination Date",
-              style: theme.textTheme.titleLarge,
-            ),
-          ),
-          SizedBox(height: 12.v),
-          _buildPhone(vaccineController, context),
+          _buildPopulationOfGoats(vaccineController),
           SizedBox(height: 43.v),
         ],
       ),
     );
   }
 
-  Widget dropdown(HeardController controller) {
+  Widget dropdown(SheepDataController controller) {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.onPrimaryContainer,
@@ -162,7 +145,7 @@ class HeardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPopulationOfSheep(HeardController vaccineController) {
+  Widget _buildZeroToThree(SheepDataController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
@@ -172,7 +155,7 @@ class HeardPage extends StatelessWidget {
         borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please enter population of sheep';
+            return 'Total';
           }
           return null;
         },
@@ -180,7 +163,25 @@ class HeardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPopulationOfGoats(HeardController vaccineController) {
+  Widget _buildFourToTwele(SheepDataController vaccineController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        textInputType: TextInputType.phone,
+        maxLength: 50,
+        controller: vaccineController.sheepPopController,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Total';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildPopulationOfGoats(SheepDataController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
@@ -198,7 +199,7 @@ class HeardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNumberOfGoatHerds(HeardController vaccineController) {
+  Widget _buildNumberOfGoatHerds(SheepDataController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
@@ -216,7 +217,7 @@ class HeardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNumberOfSheepHerds(HeardController vaccineController) {
+  Widget _buildNumberOfSheepHerds(SheepDataController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
@@ -234,7 +235,7 @@ class HeardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPhone(HeardController vaccineController, context) {
+  Widget _buildPhone(SheepDataController vaccineController, context) {
     return Padding(
       padding: EdgeInsets.only(left: 2.h),
       child: GestureDetector(
@@ -258,7 +259,7 @@ class HeardPage extends StatelessWidget {
     );
   }
 
-  Widget _addOutBreak(HeardController vaccineController) {
+  Widget _addOutBreak(SheepDataController vaccineController) {
     return Card(
       color: theme.colorScheme.onPrimary,
       child: Container(

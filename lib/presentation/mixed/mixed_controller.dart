@@ -11,7 +11,7 @@ import '../../network/app_exceptions.dart';
 import '../../provider/user_controller.dart';
 import '../../routes/app_routes.dart';
 
-class HeardController extends GetxController with BaseController {
+class MixedDataController extends GetxController with BaseController {
   final RxString selectedAddress = ''.obs;
   final TextEditingController sheepPopController = TextEditingController();
   final TextEditingController goatPopController = TextEditingController();
