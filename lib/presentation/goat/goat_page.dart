@@ -57,7 +57,7 @@ class GoatPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 1.h),
             child: Text(
-              "Add Herd Info!",
+              "Add Goat Info!",
               style: theme.textTheme.displaySmall,
             ),
           ),
@@ -65,114 +65,58 @@ class GoatPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 2.h),
             child: Text(
-              "Popupation of Sheep",
+              "Age 0-3 months",
               style: theme.textTheme.titleLarge,
             ),
           ),
           SizedBox(height: 12.v),
-          _buildPopulationOfSheep(vaccineController),
+          _buildZeroToThree(vaccineController),
           Padding(
             padding: EdgeInsets.only(left: 2.h),
             child: Text(
-              "No of Sheep Herds",
+              "Age 4 to 12 months",
               style: theme.textTheme.titleLarge,
             ),
           ),
-          SizedBox(height: 12.v),
-          _buildNumberOfSheepHerds(vaccineController),
+          _buildFourToTwele(vaccineController),
+          _buildFourToTweleVaccinated(vaccineController),
           Padding(
             padding: EdgeInsets.only(left: 2.h),
             child: Text(
-              "Population of Goats",
+              "12 to 24 months",
               style: theme.textTheme.titleLarge,
             ),
           ),
           SizedBox(height: 12.v),
-          _buildPopulationOfGoats(vaccineController),
+          _build12To24(vaccineController),
+          _build12To24Vaccinated(vaccineController),
           Padding(
             padding: EdgeInsets.only(left: 2.h),
             child: Text(
-              "No of Goats Herds",
+              "> 24 months",
               style: theme.textTheme.titleLarge,
             ),
           ),
           SizedBox(height: 12.v),
-          _buildNumberOfGoatHerds(vaccineController),
-          Padding(
-            padding: EdgeInsets.only(left: 2.h),
-            child: Text(
-              "Present Vaccination Status",
-              style: theme.textTheme.titleLarge,
-            ),
-          ),
-          SizedBox(height: 12.v),
-          dropdown(vaccineController),
-          SizedBox(height: 25.v),
-          Padding(
-            padding: EdgeInsets.only(left: 2.h),
-            child: Text(
-              "Last Vaccination Date",
-              style: theme.textTheme.titleLarge,
-            ),
-          ),
-          SizedBox(height: 12.v),
-          _buildPhone(vaccineController, context),
+          _buildGreaterThen24(vaccineController),
+          _buildGreaterThen24Vaccinated(vaccineController),
           SizedBox(height: 43.v),
         ],
       ),
     );
   }
 
-  Widget dropdown(GoatDataController controller) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.onPrimaryContainer,
-        borderRadius: BorderRadius.circular(20.h),
-      ),
-      child: DropdownButton<String>(
-        value: controller.selectedVaccineStatus.value,
-        itemHeight: 50,
-        style: theme.textTheme.bodyLarge?.copyWith(
-          color: ThemeHelper().textColor,
-        ),
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            controller.setSelectedVaccineStatus(newValue);
-          }
-        },
-        items: controller.vaccineStatusOptions.map((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(
-                value,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: ThemeHelper().textColor,
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-        isExpanded: true,
-        underline: Container(),
-        dropdownColor: Colors.white,
-        iconEnabledColor: ThemeHelper().textColor, //Icon color
-      ),
-    );
-  }
-
-  Widget _buildPopulationOfSheep(GoatDataController vaccineController) {
+  Widget _buildZeroToThree(GoatDataController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
         textInputType: TextInputType.phone,
         maxLength: 50,
-        controller: vaccineController.sheepPopController,
+        controller: vaccineController.ageZeroController,
         borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please enter population of sheep';
+            return 'Total';
           }
           return null;
         },
@@ -180,17 +124,17 @@ class GoatPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPopulationOfGoats(GoatDataController vaccineController) {
+  Widget _buildFourToTwele(GoatDataController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
         textInputType: TextInputType.phone,
         maxLength: 50,
-        controller: vaccineController.goatPopController,
+        controller: vaccineController.age4To12Controller,
         borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please enter population of goats';
+            return 'Total';
           }
           return null;
         },
@@ -198,13 +142,31 @@ class GoatPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNumberOfGoatHerds(GoatDataController vaccineController) {
+  Widget _buildFourToTweleVaccinated(GoatDataController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
         textInputType: TextInputType.phone,
         maxLength: 50,
-        controller: vaccineController.noGoatController,
+        controller: vaccineController.age4To12TwoVaccinatedController,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Total';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildGreaterThen24(GoatDataController vaccineController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        textInputType: TextInputType.phone,
+        maxLength: 50,
+        controller: vaccineController.moreThen24Controller,
         borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -216,13 +178,13 @@ class GoatPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNumberOfSheepHerds(GoatDataController vaccineController) {
+  Widget _buildGreaterThen24Vaccinated(GoatDataController vaccineController) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
         textInputType: TextInputType.phone,
         maxLength: 50,
-        controller: vaccineController.noSheepController,
+        controller: vaccineController.moreThen24VaccinatedController,
         borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -234,26 +196,38 @@ class GoatPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPhone(GoatDataController vaccineController, context) {
+  Widget _build12To24(GoatDataController vaccineController) {
     return Padding(
-      padding: EdgeInsets.only(left: 2.h),
-      child: GestureDetector(
-        onTap: () => vaccineController.selectDate(context),
-        child: AbsorbPointer(
-          absorbing: true,
-          child: CustomTextFormField(
-            controller: vaccineController.lastVaccineController,
-            textInputAction: TextInputAction.done,
-            maxLength: 11,
-            textInputType: TextInputType.phone,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter population of goats';
-              }
-              return null;
-            },
-          ),
-        ),
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        textInputType: TextInputType.phone,
+        maxLength: 50,
+        controller: vaccineController.age12To24Controller,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter population of goats';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _build12To24Vaccinated(GoatDataController vaccineController) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: CustomTextFormField(
+        textInputType: TextInputType.phone,
+        maxLength: 50,
+        controller: vaccineController.age12To24TwoVaccinatedController,
+        borderDecoration: TextFormFieldStyleHelper.fillOnPrimaryContainerTL24,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter population of goats';
+          }
+          return null;
+        },
       ),
     );
   }

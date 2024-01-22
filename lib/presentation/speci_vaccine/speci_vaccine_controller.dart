@@ -55,19 +55,45 @@ class SpeciVaccineController extends GetxController with BaseController {
         getPath,
         arguments: {
           'id': getParamId(),
-          'speci': selectedSpeciesStatus.value,
-          'vaccine': selectedVaccineType.value
+          'speci': getSelectedSpeci,
+          'vaccine': getSelectedVaccine
         },
       );
+      resetValues();
     }
   }
 
-  String get getPath {
-    if (selectedSpeciesStatus.value == 'Sheep') return AppRoutes.sheep;
-    if (selectedSpeciesStatus.value == 'Goat') return AppRoutes.goat;
-    if (selectedSpeciesStatus.value == 'Mixed')
-      return AppRoutes.mixed;
+  String get getSelectedVaccine {
+    if (selectedVaccineType.value == 'Routine Vaccination')
+      return '1';
+    else if (selectedVaccineType.value == 'Emergency Vaccination')
+      return '2';
+    else if (selectedVaccineType.value == 'Ring Vaccination')
+      return '3';
     else
-      return AppRoutes.homePage;
+      return '0';
+  }
+
+  String get getSelectedSpeci {
+    if (selectedSpeciesStatus.value == 'Sheep')
+      return '1';
+    else if (selectedSpeciesStatus.value == 'Goats')
+      return '2';
+    else if (selectedSpeciesStatus.value == 'Mixed')
+      return '3';
+    else
+      return '0';
+  }
+
+  String get getPath {
+    if (selectedSpeciesStatus.value == 'Goat') {
+      return AppRoutes.goat;
+    }
+    return AppRoutes.sheep;
+  }
+
+  void resetValues() {
+    selectedSpeciesStatus.value = 'Not Selected';
+    selectedVaccineType.value = 'Not Selected';
   }
 }

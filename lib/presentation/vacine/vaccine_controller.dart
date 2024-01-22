@@ -239,6 +239,10 @@ class VaccineController extends GetxController with BaseController {
       tehsilController.clear();
       designationController.clear();
       hospitalController.clear();
+      farmerNameController.clear();
+      farmerContactController.clear();
+      lastVaccineController.clear();
+      selectedVaccineStatus.value = 'Unknown';
     } catch (e) {
       print('');
     }

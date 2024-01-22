@@ -5,7 +5,6 @@ import 'package:ppr_disease_reporting/presentation/vacine/vaccine_controller.dar
 import 'package:ppr_disease_reporting/routes/app_routes.dart';
 import 'package:ppr_disease_reporting/theme/theme_helper.dart';
 import 'presentation/goat/goat_controller.dart';
-import 'presentation/mixed/mixed_controller.dart';
 import 'presentation/sheep/sheep_controller.dart';
 import 'presentation/home/home_controller.dart';
 import 'presentation/login/login_controller.dart';
@@ -73,7 +72,6 @@ class AppBindings extends Bindings {
     Get.put<SheepDataController>(SheepDataController());
     Get.put<GoatDataController>(GoatDataController());
     Get.put<SpeciVaccineController>(SpeciVaccineController());
-    Get.put<MixedDataController>(MixedDataController());
     Get.put<RegisterController>(RegisterController());
     Get.put<LoginController>(LoginController());
   }
