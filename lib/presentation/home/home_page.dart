@@ -85,11 +85,12 @@ class HomePage extends StatelessWidget {
 
   Widget _buildVaccineDataView(VaccineDataResponse? data) {
     if (data == null) {
-      return Center(
-          child: Text(
-        'You have not added any vaccine records',
-        style: theme.textTheme.labelLarge,
-      ));
+      return Container();
+      //  Center(
+      //     child: Text(
+      //   'You have not added any vaccine records',
+      //   style: theme.textTheme.labelLarge,
+      // ));
     } else {
       return Column(
         children: [

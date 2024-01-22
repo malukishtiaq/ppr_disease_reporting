@@ -8,7 +8,7 @@ class SpeciVaccineController extends GetxController with BaseController {
   final RxString selectedVaccineType = 'Not Selected'.obs;
   final List<String> speciesStatusOptions = [
     'Not Selected',
-    'Sheep',
+    'Sheeps',
     'Goats',
     'Mixed'
   ];
@@ -75,7 +75,7 @@ class SpeciVaccineController extends GetxController with BaseController {
   }
 
   String get getSelectedSpeci {
-    if (selectedSpeciesStatus.value == 'Sheep')
+    if (selectedSpeciesStatus.value == 'Sheeps')
       return '1';
     else if (selectedSpeciesStatus.value == 'Goats')
       return '2';
@@ -86,7 +86,7 @@ class SpeciVaccineController extends GetxController with BaseController {
   }
 
   String get getPath {
-    if (selectedSpeciesStatus.value == 'Goat') {
+    if (selectedSpeciesStatus.value == 'Goats') {
       return AppRoutes.goat;
     }
     return AppRoutes.sheep;

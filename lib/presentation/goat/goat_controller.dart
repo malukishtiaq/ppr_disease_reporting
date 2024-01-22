@@ -25,8 +25,8 @@ class GoatDataController extends GetxController with BaseController {
   Future<void> saveVaccineData(SaveVaccinationDataSheep saveDisease) async {
     try {
       showLoading('Saving data...');
-      final response = await ApiService.saveVaccineDataSheep(saveDisease)
-          .catchError((error) {
+      final response =
+          await ApiService.saveVaccineDataGoat(saveDisease).catchError((error) {
         if (error is BadRequestException) {
           var apiError = json.decode(error.message!);
           DialogHelper.showErrorDialog(description: apiError["reason"]);
