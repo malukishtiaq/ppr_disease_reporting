@@ -95,7 +95,7 @@ class VaccinePage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 1.h),
             child: Text(
-              "Add Vaccine Info!",
+              "PPR Vaccination",
               style: theme.textTheme.displaySmall,
             ),
           ),

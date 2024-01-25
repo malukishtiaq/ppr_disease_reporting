@@ -110,6 +110,7 @@ class SheepPage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
+        hintText: '0',
         textInputType: TextInputType.phone,
         maxLength: 50,
         controller: vaccineController.ageZeroController,
@@ -128,6 +129,7 @@ class SheepPage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
+        hintText: '0',
         textInputType: TextInputType.phone,
         maxLength: 50,
         controller: vaccineController.age4To12Controller,
@@ -146,6 +148,7 @@ class SheepPage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
+        hintText: '0',
         textInputType: TextInputType.phone,
         maxLength: 50,
         controller: vaccineController.age4To12TwoVaccinatedController,
@@ -164,6 +167,7 @@ class SheepPage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
+        hintText: '0',
         textInputType: TextInputType.phone,
         maxLength: 50,
         controller: vaccineController.moreThen24Controller,
@@ -182,6 +186,7 @@ class SheepPage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
+        hintText: '0',
         textInputType: TextInputType.phone,
         maxLength: 50,
         controller: vaccineController.moreThen24VaccinatedController,
@@ -200,6 +205,7 @@ class SheepPage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
+        hintText: '0',
         textInputType: TextInputType.phone,
         maxLength: 50,
         controller: vaccineController.age12To24Controller,
@@ -218,6 +224,7 @@ class SheepPage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
       child: CustomTextFormField(
+        hintText: '0',
         textInputType: TextInputType.phone,
         maxLength: 50,
         controller: vaccineController.age12To24TwoVaccinatedController,
@@ -244,7 +251,7 @@ class SheepPage extends StatelessWidget {
               onPressed: () async {
                 await vaccineController.onSaveDisease();
               },
-              text: "Save Out Break",
+              text: "Save",
             ),
           ],
         ),
@@ -255,7 +262,7 @@ class SheepPage extends StatelessWidget {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       title: AppbarTitle(
-        text: "PPR Reporting",
+        text: "PPR Vaccination",
         margin: EdgeInsets.only(left: 45.h),
       ),
       actions: [

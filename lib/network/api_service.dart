@@ -156,15 +156,15 @@ class ApiService {
       'id': saveDisease.id,
       'specie': saveDisease.specie,
       'vaccine_type': saveDisease.vaccineType,
-      'sheep_zero_to_three': saveDisease.sheepZeroToThree,
-      'sheep_four_to_twelve': saveDisease.sheepFourToTwelve,
-      'sheep_four_to_twelve_vaccinated':
+      'goats_zero_to_three': saveDisease.sheepZeroToThree,
+      'goats_four_to_twelve': saveDisease.sheepFourToTwelve,
+      'goats_four_to_twelve_vaccinated':
           saveDisease.sheepFourToTwelveVaccinated,
-      'sheep_thirteen_to_twentyfour': saveDisease.sheepThirteenToTwentyFour,
-      'sheep_thirteen_to_twentyfour_vaccinated':
+      'goats_thirteen_to_twentyfour': saveDisease.sheepThirteenToTwentyFour,
+      'goats_thirteen_to_twentyfour_vaccinated':
           saveDisease.sheepThirteenToTwentyFourVaccinated,
-      'sheep_twentyfour_plus': saveDisease.sheepTwentyFourPlus,
-      'sheep_twentyfour_plus_vaccinated':
+      'goats_twentyfour_plus': saveDisease.sheepTwentyFourPlus,
+      'goats_twentyfour_plus_vaccinated':
           saveDisease.sheepTwentyFourPlusVaccinated,
     });
 

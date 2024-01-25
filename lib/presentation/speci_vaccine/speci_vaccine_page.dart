@@ -55,7 +55,7 @@ class SpeciVaccinePage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 1.h),
             child: Text(
-              "Add Herd Info!",
+              "Add Vaccination Info",
               style: theme.textTheme.displaySmall,
             ),
           ),
@@ -188,7 +188,7 @@ class SpeciVaccinePage extends StatelessWidget {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       title: AppbarTitle(
-        text: "PPR Reporting",
+        text: "PPR Vaccination",
         margin: EdgeInsets.only(left: 45.h),
       ),
       actions: [
